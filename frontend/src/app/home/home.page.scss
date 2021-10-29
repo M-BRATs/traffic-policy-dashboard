@@ -1,31 +1,194 @@
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+.content-wrapper{
+  background: var(--color-primary);
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  grid-template-rows: 100px 50% auto;
+  width: 100%;
+  height: 100%;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+.side-menu{
+  grid-column: 1;
+  grid-row: 1 / 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  border-right: 2px solid white;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
+.side-menu-header{
+  height: 100px;
 }
 
-#container a {
-  text-decoration: none;
+.menu-item{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+
+  ion-icon{
+    color: var(--text-primary);
+    margin-right: 0.5em;
+    padding: 1em;
+  }
+
+  &.active{
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 2px solid white;
+  }
+
+  &:hover{
+    background: rgba(255, 255, 255, 0.15);
+    transition: 0.5s all ease-out;
+  }
+}
+
+.header{
+  grid-row: 1;
+  grid-column: 2;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 1em;
+}
+
+.header-heading{
+  font-size: var(--size-large);
+}
+
+.search{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: 2px solid var(--text-primary);
+  border-radius: 20px;
+  color: var(--text-primary);
+  margin-left: 2em;
+  position: relative;
+
+  ion-input{
+  --padding-start: 1em;
+  }
+  
+  ion-icon{
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.map-wrapper{
+  grid-column: 2;
+  grid-row: 2;
+  width: 100%;
+  height: 100%;
 }
 
 agm-map {
-  height: 300px;
+  width: 100%;
+  height: 100%;
+}
+
+.card-wrapper{
+  grid-row: 3;
+  grid-column: 2;
+  width: 95%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 20px;
+  height: 80%;
+  place-self: center;
+}
+
+.card{
+  background: white;
+  box-shadow: var(--shadow);
+  border-radius: 20px;
+  padding: 20px;
+  height: 100%;
+  flex-grow: 1;
+}
+
+.card-header{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1em;
+  width: 100%;
+}
+
+.card-heading{
+  color: var(--text-inverted);
+  font-weight: 700;
+  font-size: var(--size-large);
+}
+
+.card-details-label{
+  color: var(--text-inverted);
+  font-size: var(--size-small);
+  color: var(--text-accent);
+  margin-left: 5em;
+  font-weight: 700;
+}
+
+.card-item{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px 0;
+  position: relative;
+
+  &::after{
+    content:"";
+    display: block;
+    position: absolute;
+    width: calc(100% + 40px);
+    height: 1px;
+    background: lightgrey;
+    bottom: 0;
+    left: -20px;
+  }
+
+  ion-label{
+    color: inherit;
+    font-size: var(--size-small);
+  }
+
+  &.wifi{
+    color: var(--color-wifi);
+    ion-checkbox{
+      --background-checked: var(--color-wifi);
+      --border-color-checked: var(--color-wifi);
+      --border-color: var(--color-wifi);
+    }
+  }
+
+  &.safety{
+    color: var(--color-safety);
+    ion-checkbox{
+      --background-checked: var(--color-safety);
+      --border-color-checked: var(--color-safety);
+      --border-color: var(--color-safety);
+    }
+  }
+
+  &.traffic{
+    color: var(--color-traffic);
+    ion-checkbox{
+      --background-checked: var(--color-traffic);
+      --border-color-checked: var(--color-traffic);
+      --border-color: var(--color-traffic);
+    }
+  }
+}
+.label-card{
+  max-width: 45%;
 }
