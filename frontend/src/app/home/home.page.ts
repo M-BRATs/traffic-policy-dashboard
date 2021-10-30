@@ -67,7 +67,7 @@ export class HomePage implements OnInit, OnDestroy{
 
       this.accessibilityMap = new google.maps.Map(document.getElementById('accessibilityMap') as HTMLElement, {
         center: { lat: this.lat, lng: this.lng },
-        zoom: this.zoom,
+        zoom: this.zoom + 2,
       });
       this.createAccessibilityLayer();
 
