@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Loader } from '@googlemaps/js-api-loader';
 import wifiObjects from '../../data/wifi_objects.json';
 import accessibility from '../../data/accessibility.json';
 
@@ -23,9 +24,11 @@ export class HomePage implements OnInit, OnDestroy{
   lat = 48.1351;
   lng = 11.5820;
 
-  wifiLayerActive = false;
-  safetyLayerActive = true;
+  wifiLayerActive = true;
+  safetyLayerActive = false;
   accessibilityLayerActive = false;
+
+  map: google.maps.Map;
 
   constructor() {
 
@@ -59,6 +62,17 @@ export class HomePage implements OnInit, OnDestroy{
     //     this.rectangleSet.push(newRectangle);
     //   }
     // }
+    const loader = new Loader({
+      apiKey: 'AIzaSyAF7D4-rsvOHRzDm-vbj9nLo5jFwW6BWD0',
+      version: 'weekly',
+    });
+
+    loader.load().then(() => {
+      this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+        center: { lat: this.lat, lng: this.lng },
+        zoom: 8,
+      });
+    });
   }
 
   // public onMapLoad(mapInstance: google.maps.Map) {

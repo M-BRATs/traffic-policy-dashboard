@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
-import { AgmCoreModule } from '@agm/core';
 
 
 @NgModule({
@@ -14,12 +13,12 @@ import { AgmCoreModule } from '@agm/core';
     FormsModule,
     IonicModule,
     HomePageRoutingModule,
-    AgmCoreModule.forRoot({
-      // please get your own API key here:
-      // https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en
-      apiKey: 'AIzaSyAF7D4-rsvOHRzDm-vbj9nLo5jFwW6BWD0',
-      libraries: ['visualization']
-    })
+    // AgmCoreModule.forRoot({
+    //   // please get your own API key here:
+    //   // https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en
+    //   apiKey: 'AIzaSyAF7D4-rsvOHRzDm-vbj9nLo5jFwW6BWD0',
+    //   libraries: ['visualization']
+    // })
   ],
   declarations: [HomePage]
 })
