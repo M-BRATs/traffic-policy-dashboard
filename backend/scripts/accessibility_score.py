@@ -26,8 +26,8 @@ NORTH_EAST = [max(EXT.map(lambda p: p[0])), max(EXT.map(lambda p: p[1]))]
 SOUTH_WEST = [min(EXT.map(lambda p: p[0])), min(EXT.map(lambda p: p[1]))]
 SOUTH_EAST = [min(EXT.map(lambda p: p[0])), max(EXT.map(lambda p: p[1]))]
 
-MAX_Y_TILES = 100
-MAX_X_TILES = 100
+MAX_Y_TILES = 10
+MAX_X_TILES = 10
 
 
 def tile_munich():
@@ -80,6 +80,8 @@ MARIENPLATZ = [48.137131, 11.575669]
 DEPARTURE_TIME = datetime.strptime('Nov 2 2021 12:00PM', '%b %d %Y %I:%M%p')
 
 call_counter = 0
+
+
 def distance_to_center(origins):
     global call_counter
     # centre_str = f"{MARIENPLATZ},{MARIENPLATZ[1]}"
@@ -154,6 +156,13 @@ def split(values, divisions):
         values[d['index']] = result[i]
     return values
 
+
+def to_matrix(values, rows, cols):
+    result = []
+    for i in range(0, rows):
+        result.append(values[cols * i:cols * (i + 1)])
+    return result
+
 INTENSITY_DIVISIONS = 11
 
 # run script
@@ -161,12 +170,11 @@ if __name__ == '__main__':
     print(os.getenv('GMAPS_KEY'))
     tiles = tile_munich()
     with open(PATH_TO_GRID, 'w') as file:
-        json.dump(tiles, file)
+        json.dump(to_matrix(tiles, MAX_Y_TILES, MAX_X_TILES), file)
     dists_to_centre = distance_to_center(tiles)
-    print(dists_to_centre)
     heat = split(dists_to_centre, INTENSITY_DIVISIONS)
-    arr = [{'location': tiles[i], 'dist_seconds': dists_to_centre[i], 'intensity': heat[i]} for i in range(0, len(tiles))]
+    arr = [{'location': tiles[i], 'dist_seconds': dists_to_centre[i], 'intensity': heat[i]} for i in
+           range(0, len(tiles))]
+    arr = to_matrix(arr, MAX_Y_TILES, MAX_X_TILES)
     with open(PATH_TO_ACCESSIBILITY, 'w') as file:
         json.dump(arr, file)
-
-    # print(point_distance([48.14580267495881, 11.550304319974853], [48.14368366198886, 11.556999113627333]))
