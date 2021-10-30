@@ -4,7 +4,6 @@
   grid-template-rows: 100px 50% auto;
   width: 100%;
   height: 100%;
-  gap: 5px;
   background: white;
 }
 
@@ -16,7 +15,6 @@
   align-items: center;
   padding-left: 1em;
   background: var(--primary-200);
-  box-shadow: 0 5px 5px rgba(0,0,0,0.25);
 }
 
 .header-heading{
@@ -66,9 +64,14 @@
   height: 0%;
 }
 
-.card-wrapper{
+.side-menu-wrapper{
+  height: 100%;
+  overflow-y: auto;
   grid-row: 2/4;
   grid-column: 1;
+}
+
+.card-wrapper{
   width: 100%;
   height: 100%;
   display: flex;
@@ -217,6 +220,17 @@
     margin-bottom: var(--spacing);
     width: var(--size);
     height: var(--size);
+  }
+
+  ion-select{
+    --placeholder-color: var(--primary-100);
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+    border: solid 1px var(--primary-100);
+    padding: 5px;
+    border-radius: 10px;
+    margin: 0.2em 0;
+    font-size: var(--size-small);
   }
 }
 

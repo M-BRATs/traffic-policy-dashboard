@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Loader } from '@googlemaps/js-api-loader';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Loader} from '@googlemaps/js-api-loader';
 import wifiObjects from '../../data/wifi_objects.json';
 import accessibility from '../../data/accessibility.json';
 import accidents from '../../data/accidents.json';
@@ -12,23 +12,17 @@ import aqi from '../..//data/aqi.json';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnInit, OnDestroy{
+export class HomePage implements OnInit, OnDestroy {
   // google maps zoom level
   zoom = 11;
   hotspots = wifiObjects;
   accessibility = accessibility;
-  colorAccessibility = '#219653';
-  radiusAccessibility = '50';
-  rectangleSet = [];
-  // private heatmapAcc: google.maps.visualization.HeatmapLayer = null;
-  // private map;
-
 
   // initial center position for the map
   lat = 48.1351;
   lng = 11.5820;
 
-  selectedLayer = 'poi';
+  selectedLayer = 'accessibility';
 
   poiMap: google.maps.Map;
   accessibilityMap: google.maps.Map;
@@ -39,10 +33,17 @@ export class HomePage implements OnInit, OnDestroy{
   destination: string;
 
   routeForm: FormGroup;
+  placeForm: FormGroup;
 
 
-  routeTolerance: number = 0.0004;
-  placeRadius: number = 250;
+  routeTolerance = 0.0004;
+  placeRadius = 250;
+
+  wifiStat;
+  airStat;
+  safetyStat;
+  accStat = 20;
+  poiStat = 15; //TODO: safetyScore
 
   constructor() {
 
@@ -59,32 +60,31 @@ export class HomePage implements OnInit, OnDestroy{
     });
 
     loader.load().then(() => {
-      // this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
-      //   center: { lat: this.lat, lng: this.lng },
-      //   zoom: this.zoom,
-      // });
-
       this.accessibilityMap = new google.maps.Map(document.getElementById('accessibilityMap') as HTMLElement, {
-        center: { lat: this.lat, lng: this.lng },
-        zoom: this.zoom,
+        center: {lat: this.lat, lng: this.lng},
+        zoom: this.zoom + 2,
+        streetViewControl: false,
       });
-      this.createAccessibilityLayer();
+      this.initializeAccessibilityLayer();
 
       this.wifiMap = new google.maps.Map(document.getElementById('wifiMap') as HTMLElement, {
-        center: { lat: this.lat, lng: this.lng },
+        center: {lat: this.lat, lng: this.lng},
         zoom: this.zoom,
+        streetViewControl: false,
       });
 
       this.airMap = new google.maps.Map(document.getElementById('airMap') as HTMLElement, {
-        center: { lat: this.lat, lng: this.lng },
+        center: {lat: this.lat, lng: this.lng},
         zoom: this.zoom,
+        streetViewControl: false,
       });
       this.initializeWifiMap();
       this.initializeAirMap();
 
       this.poiMap = new google.maps.Map(document.getElementById('poiMap') as HTMLElement, {
-        center: { lat: this.lat, lng: this.lng },
+        center: {lat: this.lat, lng: this.lng},
         zoom: this.zoom,
+        streetViewControl: false,
       });
     });
 
@@ -98,6 +98,17 @@ export class HomePage implements OnInit, OnDestroy{
         validators: [Validators.required],
       }),
     });
+
+    this.placeForm = new FormGroup({
+      place: new FormControl(null, {
+        updateOn: 'change',
+        validators: [Validators.required],
+      })
+    });
+
+    this.wifiStat = wifiObjects.length;
+    this.accStat = accessibility.length;
+    this.airStat = "Perfect"
   }
 
   selectLayer($event) {
@@ -105,12 +116,13 @@ export class HomePage implements OnInit, OnDestroy{
   }
 
   displayRoute() {
-    this.selectedLayer = 'poi';
-    const origin = this.routeForm.get('start').value;
-    const destination = this.routeForm.get('destination').value;
+    let origin: string = this.routeForm.get('start').value;
+    let destination: string = this.routeForm.get('destination').value;
+    if (!origin.includes('München')) origin += ' München';
+    if (!destination.includes('München')) destination += ' München';
     const filter = {
       // filter by month, day of week, etc...
-    };
+    }
     const gmaps = google.maps;
 
     const directionService = new gmaps.DirectionsService();
@@ -149,7 +161,66 @@ export class HomePage implements OnInit, OnDestroy{
     });
   }
 
-  private createAccessibilityLayer() {
+  private createAccidentMarker(location) {
+    new google.maps.Circle({
+      strokeColor: 'red',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: 'red',
+      fillOpacity: 0.35,
+      map: this.poiMap,
+      center: location,
+      radius: 10,
+    });
+  }
+
+  private createWifiMarker(location: google.maps.LatLng) {
+    const circle = new google.maps.Circle({
+      strokeColor: 'blue',
+      strokeOpacity: 0.5,
+      strokeWeight: 2,
+      fillColor: 'blue',
+      fillOpacity: 0.35,
+      map: this.poiMap,
+      center: location,
+      radius: 100,
+    });
+  }
+
+  showPlacePois() {
+    let place = this.placeForm.get('place').value;
+    if (!place.includes('München')) place += ' München';
+    const gmaps = google.maps;
+
+    const geocoder = new gmaps.Geocoder();
+    geocoder.geocode({'address': place}, (results, status) => {
+      if (status == 'OK') {
+        place = results[0].geometry.location
+        // Check for accidents on route
+        for (const accident of accidents) {
+          const lat = parseFloat(accident['YGCSWGS84'].replace(',', '.'));
+          const lng = parseFloat(accident['XGCSWGS84'].replace(',', '.'));
+          const month = parseInt(accident['UMONAT']);
+          const dayOfWeek = parseInt(accident['UWOCHENTAG']);
+          const hour = parseInt(accident['USTUNDE']);
+          const location = new gmaps.LatLng(lat, lng);
+
+          if (gmaps.geometry.spherical.computeDistanceBetween(location, place) <= this.placeRadius) {
+            this.createAccidentMarker(location);
+          }
+        }
+
+        for (const wifiHotspot of wifiObjects) {
+          const location = new gmaps.LatLng(wifiHotspot)
+          if (gmaps.geometry.spherical.computeDistanceBetween(location, place) <= this.placeRadius) {
+            this.createWifiMarker(location);
+          }
+        }
+      }
+    });
+  }
+
+  private initializeAccessibilityLayer() {
     for (let i = 0; i < this.accessibility.length - 1; ++i) {
       for (let k = 1; k < this.accessibility[i].length; ++k) {
         const northEast = this.accessibility[i][k];
@@ -174,14 +245,15 @@ export class HomePage implements OnInit, OnDestroy{
   }
 
   private pickHex(weight: number) {
+    const split = 0.6;
     weight = 1 - weight;
-    if (weight <= 0.5) {
-      weight *= 2;
+    if (weight <= split) {
+      weight *= (1 / split);
       return [255, 255 * weight, 0];
     } else {
-      weight -= 0.5;
-      weight *= 2;
-      return [255 * (1 - weight), 255, 0];
+      weight -= split;
+      weight *= (1 / split);
+      return [255 * (1 - weight), 255 - 75 * (weight), 0];
     }
   }
 
@@ -204,11 +276,17 @@ export class HomePage implements OnInit, OnDestroy{
   private initializeAirMap() {
     for (const data of aqi) {
       const pos = {lat: parseFloat(data.lat), lng: parseFloat(data.lon)};
+      const maxValue = Math.max(
+        parseFloat(data.pm10),
+        parseFloat(data.o3 ? data.o3 : '0'),
+        parseFloat(data.no2 ? data.no2 : '0'),
+        parseFloat(data.pm25 ? data.pm25 : '0')
+      );
       const circle = new google.maps.Circle({
-        strokeColor: this.translateValueIntoColor(Math.max(parseFloat(data.pm10), parseFloat(data.o3 ? data.o3 : '0'), parseFloat(data.no2 ? data.no2 : '0'), parseFloat(data.pm25 ? data.pm25 : '0'))),
+        strokeColor: this.translateAirQualityValueIntoColor(maxValue),
         strokeOpacity: 0.8,
         strokeWeight: 2,
-        fillColor: this.translateValueIntoColor(Math.max(parseFloat(data.pm10), parseFloat(data.o3 ? data.o3 : '0'), parseFloat(data.no2 ? data.no2 : '0'), parseFloat(data.pm25 ? data.pm25 : '0'))),
+        fillColor: this.translateAirQualityValueIntoColor(maxValue),
         fillOpacity: 0.35,
         map: this.airMap,
         center: pos,
@@ -217,22 +295,27 @@ export class HomePage implements OnInit, OnDestroy{
     }
   }
 
+  private translateAirQualityValueIntoColor(value: number) {
+    if (value <= 50) {
+      return 'green';
+    }
+    if (value <= 100) {
+      return 'greenyellow';
+    }
+    if (value <= 200) {
+      return 'yellow';
+    }
+    if (value <= 300) {
+      return 'orange';
+    }
+    if (value <= 400) {
+      return 'red';
+    }
+    return 'darkred';
+  }
+
   get dataLoaded() {
     return this.hotspots != null && this.accessibility != null;
-  }
-
-  private createAccidentMarker(location) {
-    new google.maps.Marker({
-      position: location,
-      map: this.poiMap,
-    });
-  }
-
-  private createWifiMarker(location) {
-    new google.maps.Marker({
-      position: location,
-      map: this.poiMap,
-    })
   }
 
   get wifiLayerActive() {
@@ -249,25 +332,6 @@ export class HomePage implements OnInit, OnDestroy{
 
   get airLayerActive() {
     return this.selectedLayer === 'air';
-  }
-
-  translateValueIntoColor(value: number) {
-    if (value <= 50) {
-      return 'green'
-    }
-    if (value <= 100) {
-      return 'greenyellow'
-    }
-    if (value <= 200) {
-      return 'yellow'
-    }
-    if (value <= 300) {
-      return 'orange'
-    }
-    if (value <= 400) {
-      return 'red'
-    }
-    return 'darkred'
   }
 
   get poiLayerActive() {
