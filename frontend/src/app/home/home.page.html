@@ -6,18 +6,21 @@
         <div class="card-header">
           <ion-label class="card-heading">Select Layers</ion-label>
         </div>
-        <div class="card-item wifi">
-          <ion-label class="item-label">Wifi Coverage</ion-label>
-          <ion-checkbox [checked]="wifiLayerActive" (ionChange)="toggleLayer('wifi')"></ion-checkbox>
-        </div>
-        <div class="card-item safety">
-          <ion-label class="item-label">Road safety</ion-label>
-          <ion-checkbox [checked]="safetyLayerActive" (ionChange)="toggleLayer('safety')"></ion-checkbox>
-        </div>
-        <div class="card-item accessibility">
-          <ion-label class="item-label">Accessibility</ion-label>
-          <ion-checkbox [checked]="accessibilityLayerActive" (ionChange)="toggleLayer('accessibility')"></ion-checkbox>
-        </div>
+        <ion-radio-group [value]="selectedLayer" (ionChange)="selectLayer($event)">
+          <div class="card-item wifi">
+            <ion-label class="item-label">WLAN-Abdeckung</ion-label>
+            <ion-radio value="wifi"></ion-radio>
+          </div>
+          <div class="card-item safety">
+            <ion-label class="item-label">Verkehrssicherheit</ion-label>
+            <ion-radio value="safety"></ion-radio>
+          </div>
+          <div class="card-item accessibility">
+            <ion-label class="item-label">Verkehrsanbindung</ion-label>
+            <ion-radio value="accessibility"></ion-radio>
+          </div>
+        </ion-radio-group>
+
       </div>
 
       <div class="card route-card">
@@ -50,7 +53,7 @@
             [radius]="100"
           ></agm-circle>
       </agm-map> -->
-      <div id="map" class="map"></div>
+      <div id="wifiMap" class="map"></div>
     </div>
 
     <!-- <div class="map-wrapper" *ngIf="dataLoaded && accessibilityLayerActive"> -->

@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import wifiObjects from '../../data/wifi_objects.json';
 import accessibility from '../../data/accessibility.json';
+import { initialize } from '@ionic/core';
 
 @Component({
   selector: 'app-home',
@@ -24,11 +25,9 @@ export class HomePage implements OnInit, OnDestroy{
   lat = 48.1351;
   lng = 11.5820;
 
-  wifiLayerActive = true;
-  safetyLayerActive = false;
-  accessibilityLayerActive = false;
+  selectedLayer = 'wifi';
 
-  map: google.maps.Map;
+  wifiMap: google.maps.Map;
 
   constructor() {
 
@@ -68,10 +67,11 @@ export class HomePage implements OnInit, OnDestroy{
     });
 
     loader.load().then(() => {
-      this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+      this.wifiMap = new google.maps.Map(document.getElementById('wifiMap') as HTMLElement, {
         center: { lat: this.lat, lng: this.lng },
-        zoom: 8,
+        zoom: this.zoom,
       });
+      this.initializeWifiMap();
     });
   }
 
@@ -93,23 +93,50 @@ export class HomePage implements OnInit, OnDestroy{
   //   });
   // }
 
+  private initializeWifiMap() {
+    this.wifiMap.setCenter({lat: this.lat, lng: this.lng});
+    for (let data of wifiObjects) {
+      const pos = {lat: data.lat, lng: data.lng};
+      let circle = new google.maps.Circle({
+        strokeColor: "red",
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: "red",
+        fillOpacity: 0.35,
+        map: this.wifiMap,
+        center: pos,
+        radius: 100,
+      });
+    }
+  }
+
   get dataLoaded() {
     return this.hotspots != null && this.accessibility != null;
   }
 
-  toggleLayer(layer: string) {
-    if (layer === 'wifi') {
-      this.wifiLayerActive = !this.wifiLayerActive;
-      this.safetyLayerActive = false;
-      this.accessibilityLayerActive = false;
-    } else if (layer === 'safety') {
-      this.wifiLayerActive = false;
-      this.safetyLayerActive = !this.safetyLayerActive;
-      this.accessibilityLayerActive = false;
-    } else if (layer === 'accessibility') {
-      this.wifiLayerActive = false;
-      this.safetyLayerActive = false;
-      this.accessibilityLayerActive = !this.accessibilityLayerActive;
-    }
+  // toggleLayer(layer: string) {
+  //   if (layer === 'wifi') {
+  //     this.wifiLayerActive = !this.wifiLayerActive;
+  //   } else if (layer === 'safety') {
+  //     this.safetyLayerActive = !this.safetyLayerActive;
+  //   } else if (layer === 'accessibility') {
+  //     this.accessibilityLayerActive = !this.accessibilityLayerActive;
+  //   }
+  // }
+
+  get wifiLayerActive() {
+    return this.selectedLayer === 'wifi';
+  };
+
+  get safetyLayerActive() {
+    return this.selectedLayer === 'safety';
+  };
+
+  get accessibilityLayerActive() {
+    return this.selectedLayer === 'accessibility';
+  };
+
+  selectLayer($event) {
+    this.selectedLayer = $event.target.value;
   }
 }
