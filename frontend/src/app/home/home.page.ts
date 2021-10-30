@@ -7,11 +7,11 @@ import { Component } from '@angular/core';
 })
 export class HomePage {
   // google maps zoom level
-  zoom: number = 8;
+  zoom = 10;
 
   // initial center position for the map
-  lat: number = 51.673858;
-  lng: number = 7.815982;
+  lat = 48.1351;
+  lng = 11.5820;
 
   constructor() {}
 
