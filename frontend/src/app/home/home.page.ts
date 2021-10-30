@@ -243,17 +243,42 @@ export class HomePage implements OnInit, OnDestroy{
   private initializeAirMap() {
     for (const data of aqi) {
       const pos = {lat: parseFloat(data.lat), lng: parseFloat(data.lon)};
+      const maxValue = Math.max(
+        parseFloat(data.pm10),
+        parseFloat(data.o3 ? data.o3 : '0'),
+        parseFloat(data.no2 ? data.no2 : '0'),
+        parseFloat(data.pm25 ? data.pm25 : '0')
+      );
       const circle = new google.maps.Circle({
-        strokeColor: this.translateValueIntoColor(Math.max(parseFloat(data.pm10), parseFloat(data.o3 ? data.o3 : '0'), parseFloat(data.no2 ? data.no2 : '0'), parseFloat(data.pm25 ? data.pm25 : '0'))),
+        strokeColor: this.translateAirQualityValueIntoColor(maxValue),
         strokeOpacity: 0.8,
         strokeWeight: 2,
-        fillColor: this.translateValueIntoColor(Math.max(parseFloat(data.pm10), parseFloat(data.o3 ? data.o3 : '0'), parseFloat(data.no2 ? data.no2 : '0'), parseFloat(data.pm25 ? data.pm25 : '0'))),
+        fillColor: this.translateAirQualityValueIntoColor(maxValue),
         fillOpacity: 0.35,
         map: this.airMap,
         center: pos,
         radius: 2500,
       });
     }
+  }
+
+  private translateAirQualityValueIntoColor(value: number) {
+    if (value <= 50) {
+      return 'green';
+    }
+    if (value <= 100) {
+      return 'greenyellow';
+    }
+    if (value <= 200) {
+      return 'yellow';
+    }
+    if (value <= 300) {
+      return 'orange';
+    }
+    if (value <= 400) {
+      return 'red';
+    }
+    return 'darkred';
   }
 
   get dataLoaded() {
@@ -274,25 +299,6 @@ export class HomePage implements OnInit, OnDestroy{
 
   get airLayerActive() {
     return this.selectedLayer === 'air';
-  }
-
-  translateValueIntoColor(value: number) {
-    if (value <= 50) {
-      return 'green'
-    }
-    if (value <= 100) {
-      return 'greenyellow'
-    }
-    if (value <= 200) {
-      return 'yellow'
-    }
-    if (value <= 300) {
-      return 'orange'
-    }
-    if (value <= 400) {
-      return 'red'
-    }
-    return 'darkred'
   }
 
   get poiLayerActive() {
