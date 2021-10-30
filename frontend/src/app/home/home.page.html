@@ -1,41 +1,32 @@
 <ion-content [fullscreen]="true">
   <div class="content-wrapper">
 
-    <div class="card-wrapper">
+    <div class="side-menu-wrapper">
       <div class="card label-card">
         <div class="card-header">
-          <ion-label class="card-heading">Layer auswählen</ion-label>
+          <ion-label class="card-heading">Select Layers</ion-label>
         </div>
         <div class="card-item wifi">
-          <ion-label class="item-label">WLAN-Abdeckung</ion-label>
+          <ion-label class="item-label">Wifi Coverage</ion-label>
           <ion-checkbox [checked]="wifiLayerActive" (ionChange)="toggleLayer('wifi')"></ion-checkbox>
         </div>
         <div class="card-item safety">
-          <ion-label class="item-label">Verkehrssicherheit</ion-label>
+          <ion-label class="item-label">Road safety</ion-label>
           <ion-checkbox [checked]="safetyLayerActive" (ionChange)="toggleLayer('safety')"></ion-checkbox>
         </div>
         <div class="card-item accessibility">
-          <ion-label class="item-label">Verkehrsanbindung</ion-label>
+          <ion-label class="item-label">Accessibility</ion-label>
           <ion-checkbox [checked]="accessibilityLayerActive" (ionChange)="toggleLayer('accessibility')"></ion-checkbox>
         </div>
       </div>
 
-      <div class="card stats-card">
+      <div class="card route-card">
         <div class="card-header">
-          <ion-label class="card-heading">Statistiken</ion-label>
+          <ion-label class="card-heading">Route</ion-label>
         </div>
-        <div class="card-item wifi">
-          <ion-label class="item-label">WLAN-Abdeckung</ion-label>
-          <ion-label class="item-value">60k</ion-label>
-        </div>
-        <div class="card-item safety">
-          <ion-label class="item-label">Safety-Score</ion-label>
-          <ion-label class="item-value">16</ion-label>
-        </div>
-        <div class="card-item traffic">
-          <ion-label class="item-label">Verkehrslage</ion-label>
-          <ion-label class="item-value">zähfließend</ion-label>
-        </div>
+        <ion-input class="departure" placeholder="Enter Departure..."></ion-input>
+        <ion-icon name="arrow-down-outline"></ion-icon>
+        <ion-input class="arrival" placeholder="Enter Arrival..."></ion-input>
       </div>
     </div>
 

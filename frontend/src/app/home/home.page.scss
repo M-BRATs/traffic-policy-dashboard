@@ -170,3 +170,30 @@
     }
   }
 }
+
+
+.route-card{
+  .card-header{
+    margin-bottom: 0.5em;
+  }
+
+  ion-input{
+    border: 1px solid var(--primary-100);
+    border-radius: 10px;
+    font-size: var(--size-small);
+    --padding-end: 10px;
+  }
+
+  ion-icon{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--primary-100);
+    --spacing: 0.5em;
+    --size: 20px;
+    margin-top: var(--spacing);
+    margin-bottom: var(--spacing);
+    width: var(--size);
+    height: var(--size);
+  }
+}
