@@ -39,6 +39,12 @@ export class HomePage implements OnInit, OnDestroy{
   routeTolerance = 0.0004;
   placeRadius = 250;
 
+  wifiStat;
+  airStat;
+  safetyStat;
+  accStat = 20;
+  poiStat = 15; //TODO: safetyScore
+
   constructor() {
 
   }
@@ -99,6 +105,10 @@ export class HomePage implements OnInit, OnDestroy{
         validators: [Validators.required],
       })
     });
+
+    this.wifiStat = wifiObjects.length;
+    this.accStat = accessibility.length;
+    this.airStat = "Perfect"
   }
 
   selectLayer($event) {

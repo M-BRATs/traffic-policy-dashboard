@@ -216,6 +216,17 @@
     width: var(--size);
     height: var(--size);
   }
+
+  ion-select{
+    --placeholder-color: var(--primary-100);
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+    border: solid 1px var(--primary-100);
+    padding: 5px;
+    border-radius: 10px;
+    margin: 0.2em 0;
+    font-size: var(--size-small);
+  }
 }
 
 .btn-submit-route{
