@@ -33,22 +33,22 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  
-  
+
+
     --primary-100: hsl(191, 37%, 20%);
     --primary-200: hsl(191, 37%, 15%);
     --primary-300: hsl(191, 37%, 10%);
-    --color-wifi: hsl(0, 79%, 63%);
-    --color-safety: hsl(232, 75%, 59%);
+    --color-wifi: rgb(0, 191, 255);
+    --color-safety: hsl(0, 79%, 63%);
     --color-traffic: hsl(28, 87%, 62%);
     --color-accessibility: hsl(146, 64%, 36%);
     --color-air: hsl(271, 70%, 60%);
-    --color-poi: hsla(45, 86%, 62%);
+    --color-poi: rgb(241, 183, 75);
 
     --text-primary: white;
     --text-inverted: black;
     --text-accent: hsla(232, 75%, 59%, 1);
-  
+
     --size-xlarge: 1.5rem;
     --size-large: 1.25rem;
     --size-normal: 0.875rem;

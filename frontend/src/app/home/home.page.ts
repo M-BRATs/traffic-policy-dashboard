@@ -14,7 +14,7 @@ import aqi from '../..//data/aqi.json';
 })
 export class HomePage implements OnInit, OnDestroy{
   // google maps zoom level
-  zoom = 11;
+  zoom = 12;
   hotspots = wifiObjects;
   accessibility = accessibility;
 
@@ -28,6 +28,9 @@ export class HomePage implements OnInit, OnDestroy{
   accessibilityMap: google.maps.Map;
   wifiMap: google.maps.Map;
   airMap: google.maps.Map;
+
+  directionService: google.maps.DirectionsService;
+  directionRenderer: google.maps.DirectionsRenderer;
 
   departure: string;
   destination: string;
@@ -60,12 +63,14 @@ export class HomePage implements OnInit, OnDestroy{
     });
 
     loader.load().then(() => {
+      this.directionService = new google.maps.DirectionsService();
+    	this.directionRenderer = new google.maps.DirectionsRenderer();
+
       this.accessibilityMap = new google.maps.Map(document.getElementById('accessibilityMap') as HTMLElement, {
         center: { lat: this.lat, lng: this.lng },
-        zoom: this.zoom + 2,
+        zoom: this.zoom,
         streetViewControl: false,
       });
-      this.initializeAccessibilityLayer();
 
       this.wifiMap = new google.maps.Map(document.getElementById('wifiMap') as HTMLElement, {
         center: { lat: this.lat, lng: this.lng },
@@ -78,14 +83,16 @@ export class HomePage implements OnInit, OnDestroy{
         zoom: this.zoom,
         streetViewControl: false,
       });
-      this.initializeWifiMap();
-      this.initializeAirMap();
 
       this.poiMap = new google.maps.Map(document.getElementById('poiMap') as HTMLElement, {
         center: { lat: this.lat, lng: this.lng },
         zoom: this.zoom,
         streetViewControl: false,
       });
+
+      this.initializeWifiMap();
+      this.initializeAccessibilityLayer();
+      this.initializeAirMap();
     });
 
     this.routeForm = new FormGroup({
@@ -124,17 +131,14 @@ export class HomePage implements OnInit, OnDestroy{
       // filter by month, day of week, etc...
     }
     const gmaps = google.maps;
+    this.directionRenderer.setMap(this.poiMap);
 
-    const directionService = new gmaps.DirectionsService();
-    const directionRenderer = new gmaps.DirectionsRenderer();
-    directionRenderer.setMap(this.poiMap);
-
-    directionService.route({
+    this.directionService.route({
       origin,
       destination,
       travelMode: gmaps.TravelMode.DRIVING,
     }, (result) => {
-      directionRenderer.setDirections(result);
+      this.directionRenderer.setDirections(result);
       const path = gmaps.geometry.encoding.decodePath(result.routes[0].overview_polyline);
       const polyline = new gmaps.Polyline({path});
 
@@ -155,10 +159,14 @@ export class HomePage implements OnInit, OnDestroy{
       for (const wifiHotspot of wifiObjects) {
         const location = new gmaps.LatLng(wifiHotspot)
         if (gmaps.geometry.poly.isLocationOnEdge(location, polyline, this.routeTolerance)) {
-          this.createWifiMarker(location);
+          this.createWifiMarker(location, this.poiMap);
         }
       }
     });
+  }
+
+  showPlacePois() {
+    console.log(this.placeForm.get('place').value);
   }
 
   private createAccidentMarker(location) {
@@ -174,21 +182,17 @@ export class HomePage implements OnInit, OnDestroy{
       });
   }
 
-  private createWifiMarker(location: google.maps.LatLng) {
-    const circle = new google.maps.Circle({
-        strokeColor: 'blue',
+  private createWifiMarker(location: google.maps.LatLng, map: google.maps.Map) {
+    new google.maps.Circle({
+        strokeColor: 'deepskyblue',
         strokeOpacity: 0.5,
         strokeWeight: 2,
-        fillColor: 'blue',
+        fillColor: 'DeepSkyBlue',
         fillOpacity: 0.35,
-        map: this.poiMap,
+        map: map,
         center: location,
         radius: 100,
       });
-  }
-
-  showPlacePois() {
-    console.log(this.placeForm.get('place').value);
   }
 
   private initializeAccessibilityLayer() {
@@ -228,18 +232,9 @@ export class HomePage implements OnInit, OnDestroy{
   }
 
   private initializeWifiMap() {
-    for (const data of wifiObjects) {
-      const pos = {lat: data.lat, lng: data.lng};
-      const circle = new google.maps.Circle({
-        strokeColor: 'red',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: 'red',
-        fillOpacity: 0.35,
-        map: this.wifiMap,
-        center: pos,
-        radius: 100,
-      });
+    for (const hotspot of this.hotspots) {
+      const pos = new google.maps.LatLng(hotspot.lat, hotspot.lng);
+      this.createWifiMarker(pos, this.wifiMap);
     }
   }
 
@@ -252,11 +247,12 @@ export class HomePage implements OnInit, OnDestroy{
         parseFloat(data.no2 ? data.no2 : '0'),
         parseFloat(data.pm25 ? data.pm25 : '0')
       );
-      const circle = new google.maps.Circle({
-        strokeColor: this.translateAirQualityValueIntoColor(maxValue),
+      const color = this.translateAirQualityValueIntoColor(maxValue);
+      new google.maps.Circle({
+        strokeColor: color,
         strokeOpacity: 0.8,
         strokeWeight: 2,
-        fillColor: this.translateAirQualityValueIntoColor(maxValue),
+        fillColor: color,
         fillOpacity: 0.35,
         map: this.airMap,
         center: pos,
@@ -270,7 +266,7 @@ export class HomePage implements OnInit, OnDestroy{
       return 'green';
     }
     if (value <= 100) {
-      return 'greenyellow';
+      return 'yellowgreen';
     }
     if (value <= 200) {
       return 'yellow';
