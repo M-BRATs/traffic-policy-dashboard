@@ -26,8 +26,8 @@ NORTH_EAST = [max(EXT.map(lambda p: p[0])), max(EXT.map(lambda p: p[1]))]
 SOUTH_WEST = [min(EXT.map(lambda p: p[0])), min(EXT.map(lambda p: p[1]))]
 SOUTH_EAST = [min(EXT.map(lambda p: p[0])), max(EXT.map(lambda p: p[1]))]
 
-MAX_Y_TILES = 15
-MAX_X_TILES = 15
+MAX_Y_TILES = 100
+MAX_X_TILES = 100
 
 
 def tile_munich():
@@ -79,13 +79,16 @@ def distances_to_transit(origins, destinations):
 MARIENPLATZ = [48.137131, 11.575669]
 DEPARTURE_TIME = datetime.strptime('Nov 2 2021 12:00PM', '%b %d %Y %I:%M%p')
 
-
+call_counter = 0
 def distance_to_center(origins):
+    global call_counter
     # centre_str = f"{MARIENPLATZ},{MARIENPLATZ[1]}"
     gmaps = googlemaps.Client(key=os.getenv('GMAPS_KEY'))
     result = []
     for i in range(0, math.ceil(len(origins) / 25)):
         slice = origins[i * 25:(i + 1) * 25]
+        call_counter += 1
+        print(call_counter)
         response = gmaps.distance_matrix(
             origins=slice,
             destinations=[MARIENPLATZ],
