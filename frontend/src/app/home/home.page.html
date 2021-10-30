@@ -39,8 +39,12 @@
         <form [formGroup]="routeForm">
           <ion-input class="departure" placeholder="Enter Departure..." formControlName="start"></ion-input>
           <ion-icon name="arrow-down-outline"></ion-icon>
+          <ion-select placeholder="Select transportation">
+            <ion-select-option>Bike</ion-select-option>
+            <ion-select-option>Car</ion-select-option>
+          </ion-select>
+          <ion-icon name="arrow-down-outline"></ion-icon>
           <ion-input class="arrival" placeholder="Enter Arrival..." formControlName="destination"></ion-input>
-
           <ion-button class="btn-submit-route" color="primary" (click)="displayRoute()" [disabled]="!routeForm.valid">Display Route</ion-button>
         </form>
       </div>
