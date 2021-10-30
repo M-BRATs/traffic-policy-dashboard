@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import wifiObjects from '../../data/wifi_objects.json';
 import accessibility from '../../data/accessibility.json';
+import { initialize } from '@ionic/core';
 
 @Component({
   selector: 'app-home',
@@ -28,7 +29,7 @@ export class HomePage implements OnInit, OnDestroy{
   safetyLayerActive = false;
   accessibilityLayerActive = false;
 
-  map: google.maps.Map;
+  wifiMap: google.maps.Map;
 
   constructor() {
 
@@ -68,10 +69,11 @@ export class HomePage implements OnInit, OnDestroy{
     });
 
     loader.load().then(() => {
-      this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+      this.wifiMap = new google.maps.Map(document.getElementById('wifiMap') as HTMLElement, {
         center: { lat: this.lat, lng: this.lng },
         zoom: 8,
       });
+      this.initializeWifiMap();
     });
   }
 
@@ -92,6 +94,23 @@ export class HomePage implements OnInit, OnDestroy{
   //     this.heatmap.setOptions({radius: Math.floor(100*10)});
   //   });
   // }
+
+  private initializeWifiMap() {
+    this.wifiMap.setCenter({lat: this.lat, lng: this.lng});
+    for (let data of wifiObjects) {
+      const pos = {lat: data.lat, lng: data.lng};
+      let circle = new google.maps.Circle({
+        strokeColor: "red",
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: "red",
+        fillOpacity: 0.35,
+        map: this.wifiMap,
+        center: pos,
+        radius: 100,
+      });
+    }
+  }
 
   get dataLoaded() {
     return this.hotspots != null && this.accessibility != null;
