@@ -98,6 +98,13 @@ export class HomePage implements OnInit, OnDestroy{
         validators: [Validators.required],
       }),
     });
+
+    this.placeForm = new FormGroup({
+      place: new FormControl(null, {
+        updateOn: 'change',
+        validators: [Validators.required],
+      })
+    });
   }
 
   selectLayer($event) {
@@ -174,6 +181,10 @@ export class HomePage implements OnInit, OnDestroy{
         center: location,
         radius: 100,
       });
+  }
+
+  showPlacePois() {
+    console.log(this.placeForm.get('place').value);
   }
 
   private createAccessibilityLayer() {
