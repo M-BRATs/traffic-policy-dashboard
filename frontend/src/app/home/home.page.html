@@ -65,7 +65,7 @@
       <div id="map" class="map"></div>
     </div>
 
-    <!-- <div class="map-wrapper" *ngIf="dataLoaded && accessibilityLayerActive"> -->
+    <div class="map-wrapper" *ngIf="dataLoaded && accessibilityLayerActive"> -->
       <!-- <agm-map #heatMapAcc [latitude]="lat" [longitude]="lng" [zoom]="zoom" (mapReady)="this.onMapLoad($event)">
 
       </agm-map> -->
@@ -91,8 +91,9 @@
                 [strokeWeight]="rectangle.strokeWeight"
           >
           </agm-rectangle> -->
-      <!-- </agm-map>
-    </div> -->
+      <!-- </agm-map> -->
+      <div id="accessibilityMap" class="map"></div>
+    </div>
 
     <div class="map-wrapper" *ngIf="safetyLayerActive">
       <iframe src="https://unfallatlas.statistikportal.de/?BL=DE&Jhr=2020&Beteiligung=Personenschaden&scl=144448&E=689111&N=5336664" scrolling='no' style='height:100%; width:100%;'></iframe>

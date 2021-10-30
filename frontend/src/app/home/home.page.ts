@@ -24,9 +24,10 @@ export class HomePage implements OnInit, OnDestroy{
   lat = 48.1351;
   lng = 11.5820;
 
-  selectedLayer = 'wifi';
+  selectedLayer = 'accessibility';
 
   map: google.maps.Map;
+  accessibilityMap: google.maps.Map;
 
   constructor() {
 
@@ -36,41 +37,65 @@ export class HomePage implements OnInit, OnDestroy{
 
   }
   ngOnInit(): void {
-    // for (let i = 0; i < this.accessibility.length -1; ++i) {
-    //   for (let k = 0; k < this.accessibility[i].length -1; ++k) {
-    //     const upperLeft = this.accessibility[i][k];
-    //     const upperRight = this.accessibility[i][k];
-    //     const lowerLeft = this.accessibility[i+1][k];
-    //     const lowerRight = this.accessibility[i][k];
-    //     const intensityAVG = (upperLeft.intensity + upperRight.intensity + lowerLeft.intensity + lowerRight.intensity) / 4;
-    //     const newRectangle = {
-    //       strokeColor: '#FF0000',
-    //       strokeOpacity: 0.8,
-    //       strokeWeight: 2,
-    //       fillColor: '#FF0000',
-    //       fillOpacity: intensityAVG,
-    //       bounds: {
-    //         north: upperLeft.location[0],
-    //         south: lowerLeft.location[0],
-    //         east: lowerRight.location[1],
-    //         west: lowerLeft.location[1]
-    //       },
-    //     };
-    //     console.log(newRectangle);
-    //     this.rectangleSet.push(newRectangle);
-    //   }
-    // }
+
     const loader = new Loader({
       apiKey: 'AIzaSyAF7D4-rsvOHRzDm-vbj9nLo5jFwW6BWD0',
       version: 'weekly',
     });
 
     loader.load().then(() => {
-      this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+      // this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+      //   center: { lat: this.lat, lng: this.lng },
+      //   zoom: this.zoom,
+      // });
+
+      this.accessibilityMap = new google.maps.Map(document.getElementById('accessibilityMap') as HTMLElement, {
         center: { lat: this.lat, lng: this.lng },
         zoom: this.zoom,
       });
+
+      this.createAccessibilityLayer();
     });
+  }
+
+  selectLayer($event) {
+    this.selectedLayer = $event.target.value;
+  }
+
+  private createAccessibilityLayer() {
+    for (let i = 0; i < this.accessibility.length -1; ++i) {
+        for (let k = 1; k < this.accessibility[i].length; ++k) {
+          const northEast = this.accessibility[i][k];
+          const northWest = this.accessibility[i][k-1];
+          const southEast = this.accessibility[i+1][k];
+          const southWest = this.accessibility[i+1][k-1];
+          const avgIntensity = (northEast.intensity + northWest.intensity + southEast.intensity + southWest.intensity) / 4;
+          const color = this.pickHex(avgIntensity);
+          const rectangleOptions = {
+            strokeOpacity: 0,
+            fillColor: 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')',
+            fillOpacity: 0.4,
+            bounds: new google.maps.LatLngBounds(
+              new google.maps.LatLng(southWest.location[0], southWest.location[1]),
+              new google.maps.LatLng(northEast.location[0], northEast.location[1]),
+            ),
+            map: this.accessibilityMap
+          };
+          const newRectangle = new google.maps.Rectangle(rectangleOptions);
+        }
+      }
+  }
+
+  private pickHex(weight: number) {
+    weight = 1 - weight;
+    if (weight <= 0.5) {
+        weight *= 2;
+        return [255, 255 * weight, 0];
+    } else {
+        weight -= 0.5;
+        weight *= 2;
+        return [255 * (1 - weight), 255, 0];
+    }
   }
 
   // public onMapLoad(mapInstance: google.maps.Map) {
@@ -95,29 +120,15 @@ export class HomePage implements OnInit, OnDestroy{
     return this.hotspots != null && this.accessibility != null;
   }
 
-  // toggleLayer(layer: string) {
-  //   if (layer === 'wifi') {
-  //     this.wifiLayerActive = !this.wifiLayerActive;
-  //   } else if (layer === 'safety') {
-  //     this.safetyLayerActive = !this.safetyLayerActive;
-  //   } else if (layer === 'accessibility') {
-  //     this.accessibilityLayerActive = !this.accessibilityLayerActive;
-  //   }
-  // }
-
   get wifiLayerActive() {
     return this.selectedLayer === 'wifi';
-  };
+  }
 
   get safetyLayerActive() {
     return this.selectedLayer === 'safety';
-  };
+  }
 
   get accessibilityLayerActive() {
     return this.selectedLayer === 'accessibility';
-  };
-
-  selectLayer($event) {
-    this.selectedLayer = $event.target.value;
   }
 }
