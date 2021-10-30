@@ -50,8 +50,10 @@
     <div class="header">
       <ion-label class="header-heading">Overview</ion-label>
       <div class="search">
-        <ion-input placeholder="Search for a place..."></ion-input>
-        <ion-icon name="search-outline"></ion-icon>
+        <form [formGroup]="placeForm" (keyup.enter)="showPlacePois()">
+          <ion-input placeholder="Enter a place ..." formControlName="place"></ion-input>
+          <ion-icon name="search-outline"></ion-icon>
+        </form>
       </div>
     </div>
 

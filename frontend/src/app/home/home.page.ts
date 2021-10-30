@@ -39,10 +39,11 @@ export class HomePage implements OnInit, OnDestroy{
   destination: string;
 
   routeForm: FormGroup;
+  placeForm: FormGroup;
 
 
-  routeTolerance: number = 0.0004;
-  placeRadius: number = 250;
+  routeTolerance = 0.0004;
+  placeRadius = 250;
 
   constructor() {
 
@@ -98,6 +99,13 @@ export class HomePage implements OnInit, OnDestroy{
         validators: [Validators.required],
       }),
     });
+
+    this.placeForm = new FormGroup({
+      place: new FormControl(null, {
+        updateOn: 'change',
+        validators: [Validators.required],
+      })
+    });
   }
 
   selectLayer($event) {
@@ -147,6 +155,10 @@ export class HomePage implements OnInit, OnDestroy{
         }
       }
     });
+  }
+
+  showPlacePois() {
+    console.log(this.placeForm.get('place').value);
   }
 
   private createAccessibilityLayer() {
