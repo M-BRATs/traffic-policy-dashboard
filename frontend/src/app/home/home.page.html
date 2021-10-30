@@ -31,9 +31,14 @@
         <div class="card-header">
           <ion-label class="card-heading">Route</ion-label>
         </div>
-        <ion-input class="departure" placeholder="Enter Departure..."></ion-input>
-        <ion-icon name="arrow-down-outline"></ion-icon>
-        <ion-input class="arrival" placeholder="Enter Arrival..."></ion-input>
+
+        <form [formGroup]="routeForm">
+          <ion-input class="departure" placeholder="Enter Departure..." formControlName="start"></ion-input>
+          <ion-icon name="arrow-down-outline"></ion-icon>
+          <ion-input class="arrival" placeholder="Enter Arrival..." formControlName="destination"></ion-input>
+
+          <ion-button color="primary" (click)="displayRoute()" [disabled]="!routeForm.valid">Display Route</ion-button>
+        </form>
       </div>
     </div>
 

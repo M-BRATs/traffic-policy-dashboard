@@ -3,6 +3,7 @@ import { Loader } from '@googlemaps/js-api-loader';
 import wifiObjects from '../../data/wifi_objects.json';
 import accessibility from '../../data/accessibility.json';
 import { initialize } from '@ionic/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -34,6 +35,9 @@ export class HomePage implements OnInit, OnDestroy{
   departure: string;
   destination: string;
 
+  routeForm: FormGroup;
+
+
   constructor() {
 
   }
@@ -43,7 +47,6 @@ export class HomePage implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-
     const loader = new Loader({
       apiKey: 'AIzaSyAF7D4-rsvOHRzDm-vbj9nLo5jFwW6BWD0',
       version: 'weekly',
@@ -72,10 +75,26 @@ export class HomePage implements OnInit, OnDestroy{
         zoom: this.zoom,
       });
     });
+
+    this.routeForm = new FormGroup({
+      start: new FormControl(null, {
+        updateOn: 'change',
+        validators: [Validators.required],
+      }),
+      destination: new FormControl(null, {
+        updateOn: 'change',
+        validators: [Validators.required],
+      }),
+    });
   }
 
   selectLayer($event) {
     this.selectedLayer = $event.target.value;
+  }
+
+  displayRoute() {
+    console.log(this.routeForm.get('start').value);
+    console.log(this.routeForm.get('destination').value);
   }
 
   private createAccessibilityLayer() {
