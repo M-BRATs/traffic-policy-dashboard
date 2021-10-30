@@ -55,6 +55,15 @@
 .map {
   width: 100%;
   height: 100%;
+  opacity: 1;
+  zoom: 1;
+}
+
+.hide-map {
+  opacity: 0;
+  zoom: 0;
+  width: 0%;
+  height: 0%;
 }
 
 .card-wrapper{
