@@ -17,7 +17,8 @@ import { AgmCoreModule } from '@agm/core';
     AgmCoreModule.forRoot({
       // please get your own API key here:
       // https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en
-      apiKey: 'AIzaSyAF7D4-rsvOHRzDm-vbj9nLo5jFwW6BWD0'
+      apiKey: 'AIzaSyAF7D4-rsvOHRzDm-vbj9nLo5jFwW6BWD0',
+      libraries: ['visualization']
     })
   ],
   declarations: [HomePage]
