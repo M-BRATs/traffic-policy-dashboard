@@ -8,6 +8,7 @@ let map = new google.maps.Map(
 );
 
 function pickHex(weight) {
+    weight = 1 - weight;
     if (weight <= 0.5) {
         weight *= 2;
         return [255 , 255 *  weight, 0]
@@ -24,10 +25,13 @@ const GREEN = [0,255,0];
 for (let i = 0; i < accMatrix.length - 1; i++) {
     for (let j = 1; j < accMatrix.length; j++) {
         let ne = accMatrix[i][j];
+        let nw = accMatrix[i][j - 1];
+        let se = accMatrix[i + 1][j];
         let sw = accMatrix[i + 1][j - 1];
         const ne_loc = ne.location;
         const sw_loc = sw.location;
-        const color = pickHex( 1- ne.intensity)
+        const avgIntensity = (nw.intensity + ne.intensity + se.intensity + sw.intensity) / 4;
+        const color = pickHex( avgIntensity)
         const rectangleOptions = {
             bounds: new google.maps.LatLngBounds(
                 new google.maps.LatLng(sw_loc[0], sw_loc[1]),
