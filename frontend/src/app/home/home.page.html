@@ -8,16 +8,20 @@
         </div>
         <ion-radio-group [value]="selectedLayer" (ionChange)="selectLayer($event)">
           <div class="card-item wifi">
-            <ion-label class="item-label">WLAN-Abdeckung</ion-label>
+            <ion-label class="item-label">Wifi Coverage</ion-label>
             <ion-radio value="wifi"></ion-radio>
           </div>
           <div class="card-item safety">
-            <ion-label class="item-label">Verkehrssicherheit</ion-label>
+            <ion-label class="item-label">Road Safety</ion-label>
             <ion-radio value="safety"></ion-radio>
           </div>
           <div class="card-item accessibility">
-            <ion-label class="item-label">Verkehrsanbindung</ion-label>
+            <ion-label class="item-label">Accessibility</ion-label>
             <ion-radio value="accessibility"></ion-radio>
+          </div>
+          <div class="card-item air">
+            <ion-label class="item-label">Air Quality</ion-label>
+            <ion-radio value="air"></ion-radio>
           </div>
         </ion-radio-group>
 
@@ -35,9 +39,9 @@
 
 
     <div class="header">
-      <ion-label class="header-heading">Übersicht</ion-label>
+      <ion-label class="header-heading">Overview</ion-label>
       <div class="search">
-        <ion-input placeholder="Nach Ort suchen..."></ion-input>
+        <ion-input placeholder="Search for a place..."></ion-input>
         <ion-icon name="search-outline"></ion-icon>
       </div>
     </div>

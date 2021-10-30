@@ -38,15 +38,17 @@
     --primary-100: hsl(191, 37%, 20%);
     --primary-200: hsl(191, 37%, 15%);
     --primary-300: hsl(191, 37%, 10%);
-    --color-wifi: hsla(0, 79%, 63%, 1);
-    --color-safety: hsla(232, 75%, 59%, 1);
-    --color-traffic: hsla(28, 87%, 62%, 1);
+    --color-wifi: hsl(0, 79%, 63%);
+    --color-safety: hsl(232, 75%, 59%);
+    --color-traffic: hsl(28, 87%, 62%);
     --color-accessibility: hsl(146, 64%, 36%);
+    --color-air: hsl(271, 70%, 60%);
 
     --text-primary: white;
     --text-inverted: black;
     --text-accent: hsla(232, 75%, 59%, 1);
   
+    --size-xlarge: 1.5rem;
     --size-large: 1.25rem;
     --size-normal: 0.875rem;
     --size-small: 0.75rem;

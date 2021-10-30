@@ -20,7 +20,7 @@
 }
 
 .header-heading{
-  font-size: var(--size-large);
+  font-size: var(--size-xlarge);
 }
 
 .search{
@@ -136,37 +136,41 @@
 
   &.wifi{
     color: var(--color-wifi);
-    ion-checkbox{
-      --background-checked: var(--color-wifi);
-      --border-color-checked: var(--color-wifi);
-      --border-color: var(--color-wifi);
+    ion-radio{
+      --color-checked: var(--color-wifi);
+      --color: var(--color-wifi);
     }
   }
 
   &.safety{
     color: var(--color-safety);
-    ion-checkbox{
-      --background-checked: var(--color-safety);
-      --border-color-checked: var(--color-safety);
-      --border-color: var(--color-safety);
+    ion-radio{
+      --color-checked: var(--color-safety);
+      --color: var(--color-safety);
     }
   }
 
   &.traffic{
     color: var(--color-traffic);
-    ion-checkbox{
-      --background-checked: var(--color-traffic);
-      --border-color-checked: var(--color-traffic);
-      --border-color: var(--color-traffic);
+    ion-radio{
+      --color-checked: var(--color-traffic);
+      --color: var(--color-traffic);
     }
   }
 
   &.accessibility{
     color: var(--color-accessibility);
-    ion-checkbox{
-      --background-checked: var(--color-accessibility);
-      --border-color-checked: var(--color-accessibility);
-      --border-color: var(--color-accessibility);
+    ion-radio{
+      --color-checked: var(--color-accessibility);
+      --color: var(--color-accessibility);
+    }
+  }
+
+  &.air{
+    color: var(--color-air);
+    ion-radio{
+      --color-checked: var(--color-air);
+      --color: var(--color-air);
     }
   }
 }
