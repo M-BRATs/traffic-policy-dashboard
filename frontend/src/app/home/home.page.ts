@@ -105,8 +105,10 @@ export class HomePage implements OnInit, OnDestroy{
   }
 
   displayRoute() {
-    const origin = this.routeForm.get('start').value;
-    const destination = this.routeForm.get('destination').value;
+    let origin : string = this.routeForm.get('start').value;
+    let destination : string = this.routeForm.get('destination').value;
+    if(!origin.includes('München')) origin += ' München';
+    if(!destination.includes('München')) destination += ' München';
     const filter = {
       // filter by month, day of week, etc...
     }
@@ -146,6 +148,32 @@ export class HomePage implements OnInit, OnDestroy{
         }
       }
     });
+  }
+
+  private createAccidentMarker(location) {
+    new google.maps.Circle({
+        strokeColor: 'red',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: 'red',
+        fillOpacity: 0.35,
+        map: this.poiMap,
+        center: location,
+        radius: 10,
+      });
+  }
+
+  private createWifiMarker(location : google.maps.LatLng) {
+    const circle = new google.maps.Circle({
+        strokeColor: 'blue',
+        strokeOpacity: 0.5,
+        strokeWeight: 2,
+        fillColor: 'blue',
+        fillOpacity: 0.35,
+        map: this.poiMap,
+        center: location,
+        radius: 100,
+      });
   }
 
   private createAccessibilityLayer() {
@@ -218,20 +246,6 @@ export class HomePage implements OnInit, OnDestroy{
 
   get dataLoaded() {
     return this.hotspots != null && this.accessibility != null;
-  }
-
-  private createAccidentMarker(location) {
-    new google.maps.Marker({
-      position: location,
-      map: this.poiMap,
-    });
-  }
-
-  private createWifiMarker(location) {
-    new google.maps.Marker({
-      position: location,
-      map: this.poiMap,
-    })
   }
 
   get wifiLayerActive() {
