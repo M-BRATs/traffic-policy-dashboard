@@ -182,6 +182,14 @@
       --color: var(--color-air);
     }
   }
+
+  &.poi{
+    color: var(--color-poi);
+    ion-radio{
+      --color-checked: var(--color-poi);
+      --color: var(--color-poi);
+    }
+  }
 }
 
 
