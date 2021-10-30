@@ -28,9 +28,13 @@ export class HomePage implements OnInit, OnDestroy{
 
   selectedLayer = 'accessibility';
 
+  poiMap: google.maps.Map;
   accessibilityMap: google.maps.Map;
   wifiMap: google.maps.Map;
   airMap: google.maps.Map;
+
+  departure: string;
+  destination: string;
 
   constructor() {
 
@@ -39,6 +43,7 @@ export class HomePage implements OnInit, OnDestroy{
   ngOnDestroy(): void {
 
   }
+
   ngOnInit(): void {
 
     const loader = new Loader({
@@ -69,6 +74,11 @@ export class HomePage implements OnInit, OnDestroy{
       });
       this.initializeWifiMap();
       this.initializeAirMap();
+
+      this.poiMap = new google.maps.Map(document.getElementById('accessibilityMap') as HTMLElement, {
+        center: { lat: this.lat, lng: this.lng },
+        zoom: this.zoom,
+      });
     });
   }
 
