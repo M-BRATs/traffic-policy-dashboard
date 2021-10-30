@@ -39,6 +39,7 @@ export class HomePage implements OnInit, OnDestroy{
   destination: string;
 
   routeForm: FormGroup;
+  placeForm: FormGroup;
 
 
   routeTolerance: number = 0.0004;
