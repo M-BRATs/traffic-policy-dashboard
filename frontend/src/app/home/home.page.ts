@@ -17,12 +17,6 @@ export class HomePage implements OnInit, OnDestroy {
   zoom = 11;
   hotspots = wifiObjects;
   accessibility = accessibility;
-  colorAccessibility = '#219653';
-  radiusAccessibility = '50';
-  rectangleSet = [];
-  // private heatmapAcc: google.maps.visualization.HeatmapLayer = null;
-  // private map;
-
 
   // initial center position for the map
   lat = 48.1351;
@@ -42,8 +36,14 @@ export class HomePage implements OnInit, OnDestroy {
   placeForm: FormGroup;
 
 
-  routeTolerance: number = 0.0004;
-  placeRadius: number = 250;
+  routeTolerance = 0.0004;
+  placeRadius = 250;
+
+  wifiStat;
+  airStat;
+  safetyStat;
+  accStat = 20;
+  poiStat = 15; //TODO: safetyScore
 
   constructor() {
 
@@ -60,25 +60,23 @@ export class HomePage implements OnInit, OnDestroy {
     });
 
     loader.load().then(() => {
-      // this.map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
-      //   center: { lat: this.lat, lng: this.lng },
-      //   zoom: this.zoom,
-      // });
-
       this.accessibilityMap = new google.maps.Map(document.getElementById('accessibilityMap') as HTMLElement, {
         center: {lat: this.lat, lng: this.lng},
         zoom: this.zoom + 2,
+        streetViewControl: false,
       });
-      this.createAccessibilityLayer();
+      this.initializeAccessibilityLayer();
 
       this.wifiMap = new google.maps.Map(document.getElementById('wifiMap') as HTMLElement, {
         center: {lat: this.lat, lng: this.lng},
         zoom: this.zoom,
+        streetViewControl: false,
       });
 
       this.airMap = new google.maps.Map(document.getElementById('airMap') as HTMLElement, {
         center: {lat: this.lat, lng: this.lng},
         zoom: this.zoom,
+        streetViewControl: false,
       });
       this.initializeWifiMap();
       this.initializeAirMap();
@@ -86,6 +84,7 @@ export class HomePage implements OnInit, OnDestroy {
       this.poiMap = new google.maps.Map(document.getElementById('poiMap') as HTMLElement, {
         center: {lat: this.lat, lng: this.lng},
         zoom: this.zoom,
+        streetViewControl: false,
       });
     });
 
@@ -106,6 +105,10 @@ export class HomePage implements OnInit, OnDestroy {
         validators: [Validators.required],
       })
     });
+
+    this.wifiStat = wifiObjects.length;
+    this.accStat = accessibility.length;
+    this.airStat = "Perfect"
   }
 
   selectLayer($event) {
@@ -217,7 +220,7 @@ export class HomePage implements OnInit, OnDestroy {
     });
   }
 
-  private createAccessibilityLayer() {
+  private initializeAccessibilityLayer() {
     for (let i = 0; i < this.accessibility.length - 1; ++i) {
       for (let k = 1; k < this.accessibility[i].length; ++k) {
         const northEast = this.accessibility[i][k];
