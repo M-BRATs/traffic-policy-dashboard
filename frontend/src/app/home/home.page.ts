@@ -28,7 +28,7 @@ export class HomePage implements OnInit, OnDestroy{
   lat = 48.1351;
   lng = 11.5820;
 
-  selectedLayer = 'accessibility';
+  selectedLayer = 'poi';
 
   poiMap: google.maps.Map;
   accessibilityMap: google.maps.Map;
@@ -105,11 +105,12 @@ export class HomePage implements OnInit, OnDestroy{
   }
 
   displayRoute() {
+    this.selectedLayer = 'poi';
     const origin = this.routeForm.get('start').value;
     const destination = this.routeForm.get('destination').value;
     const filter = {
       // filter by month, day of week, etc...
-    }
+    };
     const gmaps = google.maps;
 
     const directionService = new gmaps.DirectionsService();
