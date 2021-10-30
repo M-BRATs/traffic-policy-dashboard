@@ -149,10 +149,11 @@ export class HomePage implements OnInit, OnDestroy {
         const month = parseInt(accident['UMONAT']);
         const dayOfWeek = parseInt(accident['UWOCHENTAG']);
         const hour = parseInt(accident['USTUNDE']);
+        const category = parseInt(accident['UKATEGORIE']);
         const location = new gmaps.LatLng(lat, lng);
 
         if (gmaps.geometry.poly.isLocationOnEdge(location, polyline, this.routeTolerance)) {
-          this.createAccidentMarker(location);
+          this.createAccidentMarker(location, category);
         }
       }
 
@@ -181,10 +182,11 @@ export class HomePage implements OnInit, OnDestroy {
           const month = parseInt(accident['UMONAT']);
           const dayOfWeek = parseInt(accident['UWOCHENTAG']);
           const hour = parseInt(accident['USTUNDE']);
+          const category = parseInt(accident['UKATEGORIE']);
           const location = new gmaps.LatLng(lat, lng);
 
           if (gmaps.geometry.spherical.computeDistanceBetween(location, place) <= this.placeRadius) {
-            this.createAccidentMarker(location);
+            this.createAccidentMarker(location, category);
           }
         }
 
@@ -198,12 +200,18 @@ export class HomePage implements OnInit, OnDestroy {
     });
   }
 
-  private createAccidentMarker(location) {
+  private createAccidentMarker(location, category = 1) {
+    let fillColor;
+    switch (category) {
+      case 1: fillColor = 'red'; break;
+      case 2: fillColor = 'orangered'; break;
+      case 3: fillColor = 'orange'; break;
+    }
     new google.maps.Circle({
-      strokeColor: 'red',
+      strokeColor:  fillColor,
       strokeOpacity: 0.8,
       strokeWeight: 2,
-      fillColor: 'red',
+      fillColor: fillColor,
       fillOpacity: 0.35,
       map: this.poiMap,
       center: location,
