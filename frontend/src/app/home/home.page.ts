@@ -78,7 +78,7 @@ export class HomePage implements OnInit, OnDestroy{
       this.initializeWifiMap();
       this.initializeAirMap();
 
-      this.poiMap = new google.maps.Map(document.getElementById('accessibilityMap') as HTMLElement, {
+      this.poiMap = new google.maps.Map(document.getElementById('poiMap') as HTMLElement, {
         center: { lat: this.lat, lng: this.lng },
         zoom: this.zoom,
       });
@@ -173,6 +173,25 @@ export class HomePage implements OnInit, OnDestroy{
     }
   }
 
+  private translateValueIntoColor(value: number) {
+    if (value <= 50) {
+      return 'green';
+    }
+    if (value <= 100) {
+      return 'greenyellow';
+    }
+    if (value <= 200) {
+      return 'yellow';
+    }
+    if (value <= 300) {
+      return 'orange';
+    }
+    if (value <= 400) {
+      return 'red';
+    }
+    return 'darkred';
+  }
+
   get dataLoaded() {
     return this.hotspots != null && this.accessibility != null;
   }
@@ -193,22 +212,7 @@ export class HomePage implements OnInit, OnDestroy{
     return this.selectedLayer === 'air';
   }
 
-  translateValueIntoColor(value: number) {
-    if (value <= 50) {
-      return 'green'
-    }
-    if (value <= 100) {
-      return 'greenyellow'
-    }
-    if (value <= 200) {
-      return 'yellow'
-    }
-    if (value <= 300) {
-      return 'orange'
-    }
-    if (value <= 400) {
-      return 'red'
-    }
-    return 'darkred'
+  get poiLayerActive() {
+    return this.selectedLayer === 'poi';
   }
 }

@@ -7,21 +7,25 @@
           <ion-label class="card-heading">Select Layers</ion-label>
         </div>
         <ion-radio-group [value]="selectedLayer" (ionChange)="selectLayer($event)">
-          <div class="card-item wifi">
-            <ion-label class="item-label">Wifi Coverage</ion-label>
-            <ion-radio value="wifi"></ion-radio>
-          </div>
-          <div class="card-item safety">
-            <ion-label class="item-label">Road Safety</ion-label>
-            <ion-radio value="safety"></ion-radio>
+          <div class="card-item accessibility">
+            <ion-label class="item-label">POIs</ion-label>
+            <ion-radio value="poi"></ion-radio>
           </div>
           <div class="card-item accessibility">
             <ion-label class="item-label">Accessibility</ion-label>
             <ion-radio value="accessibility"></ion-radio>
           </div>
+          <div class="card-item safety">
+            <ion-label class="item-label">Road Safety</ion-label>
+            <ion-radio value="safety"></ion-radio>
+          </div>
           <div class="card-item air">
             <ion-label class="item-label">Air Quality</ion-label>
             <ion-radio value="air"></ion-radio>
+          </div>
+          <div class="card-item wifi">
+            <ion-label class="item-label">Wifi Coverage</ion-label>
+            <ion-radio value="wifi"></ion-radio>
           </div>
         </ion-radio-group>
 
@@ -65,6 +69,10 @@
 
     <div class="map-wrapper">
       <div id="airMap" [class.map]="airLayerActive" [class.hide-map]="!airLayerActive"></div>
+    </div>
+
+    <div class="map-wrapper">
+      <div id="poiMap" [class.map]="poiLayerActive" [class.hide-map]="!poiLayerActive"></div>
     </div>
 
   </div>
