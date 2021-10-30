@@ -211,3 +211,18 @@
     height: var(--size);
   }
 }
+
+.btn-submit-route{
+  display: block;
+  width: max-content;
+  margin-top: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1em;
+  transition: 0.5s all ease-out;
+
+  &:hover{
+    box-shadow: 5px 5px 10px rgba(63, 86, 177, 0.5);
+    transition: 0.5s all ease-out;
+  }
+}
