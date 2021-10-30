@@ -14,21 +14,20 @@ import openrouteservice
 ORS_URL = 'https://localhost:8080/ors/v2'
 
 PATH_TO_SCRIPTS = Path(__file__).parent
-PATH_TO_ACCESSIBILITY = (PATH_TO_SCRIPTS / "../data/accessibility.json").resolve()
+PATH_TO_ACCESSIBILITY = (PATH_TO_SCRIPTS / "../data/accessibility_large.json").resolve()
 PATH_TO_GRID = (PATH_TO_SCRIPTS / "../data/grid.json").resolve()
 
-EXT = seq([[48.248187866242496, 11.500626523398886],
-           [48.159406204100904, 11.362610772210829],
-           [48.06266997152855, 11.504746396568677],
-           [48.13649938883739, 11.721726383511097]])
+EXT = seq([[48.039070, 11.805496],
+           [48.220441, 11.421490],
+           [48.039070, 11.805496],
+           [48.220441, 11.421490]])
 NORTH_WEST = [max(EXT.map(lambda p: p[0])), min(EXT.map(lambda p: p[1]))]
 NORTH_EAST = [max(EXT.map(lambda p: p[0])), max(EXT.map(lambda p: p[1]))]
 SOUTH_WEST = [min(EXT.map(lambda p: p[0])), min(EXT.map(lambda p: p[1]))]
 SOUTH_EAST = [min(EXT.map(lambda p: p[0])), max(EXT.map(lambda p: p[1]))]
 
-MAX_Y_TILES = 10
-MAX_X_TILES = 10
-
+MAX_Y_TILES = 100
+MAX_X_TILES = 100
 
 def tile_munich():
     y_diff = NORTH_WEST[0] - SOUTH_WEST[0]
