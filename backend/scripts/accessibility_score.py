@@ -29,7 +29,6 @@ SOUTH_EAST = [min(EXT.map(lambda p: p[0])), max(EXT.map(lambda p: p[1]))]
 MAX_Y_TILES = 10
 MAX_X_TILES = 10
 
-
 def tile_munich():
     y_diff = NORTH_WEST[0] - SOUTH_WEST[0]
     x_diff = NORTH_EAST[1] - NORTH_WEST[1]

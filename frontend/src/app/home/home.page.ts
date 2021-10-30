@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Loader } from '@googlemaps/js-api-loader';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Loader} from '@googlemaps/js-api-loader';
 import wifiObjects from '../../data/wifi_objects.json';
 import accessibility from '../../data/accessibility.json';
 import accidents from '../../data/accidents.json';
@@ -12,7 +12,7 @@ import aqi from '../..//data/aqi.json';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnInit, OnDestroy{
+export class HomePage implements OnInit, OnDestroy {
   // google maps zoom level
   zoom = 11;
   hotspots = wifiObjects;
@@ -66,25 +66,25 @@ export class HomePage implements OnInit, OnDestroy{
       // });
 
       this.accessibilityMap = new google.maps.Map(document.getElementById('accessibilityMap') as HTMLElement, {
-        center: { lat: this.lat, lng: this.lng },
+        center: {lat: this.lat, lng: this.lng},
         zoom: this.zoom + 2,
       });
       this.createAccessibilityLayer();
 
       this.wifiMap = new google.maps.Map(document.getElementById('wifiMap') as HTMLElement, {
-        center: { lat: this.lat, lng: this.lng },
+        center: {lat: this.lat, lng: this.lng},
         zoom: this.zoom,
       });
 
       this.airMap = new google.maps.Map(document.getElementById('airMap') as HTMLElement, {
-        center: { lat: this.lat, lng: this.lng },
+        center: {lat: this.lat, lng: this.lng},
         zoom: this.zoom,
       });
       this.initializeWifiMap();
       this.initializeAirMap();
 
       this.poiMap = new google.maps.Map(document.getElementById('poiMap') as HTMLElement, {
-        center: { lat: this.lat, lng: this.lng },
+        center: {lat: this.lat, lng: this.lng},
         zoom: this.zoom,
       });
     });
@@ -113,10 +113,10 @@ export class HomePage implements OnInit, OnDestroy{
   }
 
   displayRoute() {
-    let origin : string = this.routeForm.get('start').value;
-    let destination : string = this.routeForm.get('destination').value;
-    if(!origin.includes('München')) origin += ' München';
-    if(!destination.includes('München')) destination += ' München';
+    let origin: string = this.routeForm.get('start').value;
+    let destination: string = this.routeForm.get('destination').value;
+    if (!origin.includes('München')) origin += ' München';
+    if (!destination.includes('München')) destination += ' München';
     const filter = {
       // filter by month, day of week, etc...
     }
@@ -160,32 +160,61 @@ export class HomePage implements OnInit, OnDestroy{
 
   private createAccidentMarker(location) {
     new google.maps.Circle({
-        strokeColor: 'red',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: 'red',
-        fillOpacity: 0.35,
-        map: this.poiMap,
-        center: location,
-        radius: 10,
-      });
+      strokeColor: 'red',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: 'red',
+      fillOpacity: 0.35,
+      map: this.poiMap,
+      center: location,
+      radius: 10,
+    });
   }
 
-  private createWifiMarker(location : google.maps.LatLng) {
+  private createWifiMarker(location: google.maps.LatLng) {
     const circle = new google.maps.Circle({
-        strokeColor: 'blue',
-        strokeOpacity: 0.5,
-        strokeWeight: 2,
-        fillColor: 'blue',
-        fillOpacity: 0.35,
-        map: this.poiMap,
-        center: location,
-        radius: 100,
-      });
+      strokeColor: 'blue',
+      strokeOpacity: 0.5,
+      strokeWeight: 2,
+      fillColor: 'blue',
+      fillOpacity: 0.35,
+      map: this.poiMap,
+      center: location,
+      radius: 100,
+    });
   }
 
   showPlacePois() {
-    console.log(this.placeForm.get('place').value);
+    let place = this.placeForm.get('place').value;
+    if (!place.includes('München')) place += ' München';
+    const gmaps = google.maps;
+
+    const geocoder = new gmaps.Geocoder();
+    geocoder.geocode({'address': place}, (results, status) => {
+      if (status == 'OK') {
+        place = results[0].geometry.location
+        // Check for accidents on route
+        for (const accident of accidents) {
+          const lat = parseFloat(accident['YGCSWGS84'].replace(',', '.'));
+          const lng = parseFloat(accident['XGCSWGS84'].replace(',', '.'));
+          const month = parseInt(accident['UMONAT']);
+          const dayOfWeek = parseInt(accident['UWOCHENTAG']);
+          const hour = parseInt(accident['USTUNDE']);
+          const location = new gmaps.LatLng(lat, lng);
+
+          if (gmaps.geometry.spherical.computeDistanceBetween(location, place) <= this.placeRadius) {
+            this.createAccidentMarker(location);
+          }
+        }
+
+        for (const wifiHotspot of wifiObjects) {
+          const location = new gmaps.LatLng(wifiHotspot)
+          if (gmaps.geometry.spherical.computeDistanceBetween(location, place) <= this.placeRadius) {
+            this.createWifiMarker(location);
+          }
+        }
+      }
+    });
   }
 
   private createAccessibilityLayer() {
@@ -213,14 +242,15 @@ export class HomePage implements OnInit, OnDestroy{
   }
 
   private pickHex(weight: number) {
+    const split = 0.6;
     weight = 1 - weight;
-    if (weight <= 0.5) {
-      weight *= 2;
+    if (weight <= split) {
+      weight *= (1 / split);
       return [255, 255 * weight, 0];
     } else {
-      weight -= 0.5;
-      weight *= 2;
-      return [255 * (1 - weight), 255, 0];
+      weight -= split;
+      weight *= (1 / split);
+      return [255 * (1 - weight), 255 - 75 * (weight), 0];
     }
   }
 
