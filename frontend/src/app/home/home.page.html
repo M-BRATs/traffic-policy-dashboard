@@ -1,30 +1,48 @@
 <ion-content [fullscreen]="true">
   <div class="content-wrapper">
-    <div class="side-menu">
-      <div class="side-menu-header">
 
+    <div class="card-wrapper">
+      <div class="card label-card">
+        <div class="card-header">
+          <ion-label class="card-heading">Layer auswählen</ion-label>
+        </div>
+        <div class="card-item wifi">
+          <ion-label class="item-label">WLAN-Abdeckung</ion-label>
+          <ion-checkbox></ion-checkbox>
+        </div>
+        <div class="card-item safety">
+          <ion-label class="item-label">Safety-Score</ion-label>
+          <ion-checkbox></ion-checkbox>
+        </div>
+        <div class="card-item traffic">
+          <ion-label class="item-label">Verkehrslage</ion-label>
+          <ion-checkbox></ion-checkbox>
+        </div>
+        <div class="card-item accessibility">
+          <ion-label class="item-label">Accessibility</ion-label>
+          <ion-checkbox></ion-checkbox>
+        </div>
       </div>
-      <div class="menu-item active">
-        <ion-icon name="at-outline"></ion-icon>
-        <ion-label>Übersicht</ion-label>
-      </div>
-      <div class="menu-item">
-        <ion-icon name="at-outline"></ion-icon>
-        <ion-label>Menu1</ion-label>
-      </div>
-      <div class="menu-item">
-        <ion-icon name="at-outline"></ion-icon>
-        <ion-label>Menu2</ion-label>
-      </div>
-      <div class="menu-item">
-        <ion-icon name="at-outline"></ion-icon>
-        <ion-label>Menu3</ion-label>
-      </div>
-      <div class="menu-item">
-        <ion-icon name="at-outline"></ion-icon>
-        <ion-label>Menu4</ion-label>
+
+      <div class="card stats-card">
+        <div class="card-header">
+          <ion-label class="card-heading">Statistiken</ion-label>
+        </div>
+        <div class="card-item wifi">
+          <ion-label class="item-label">WLAN-Abdeckung</ion-label>
+          <ion-label class="item-value">60k</ion-label>
+        </div>
+        <div class="card-item safety">
+          <ion-label class="item-label">Safety-Score</ion-label>
+          <ion-label class="item-value">16</ion-label>
+        </div>
+        <div class="card-item traffic">
+          <ion-label class="item-label">Verkehrslage</ion-label>
+          <ion-label class="item-value">zähfließend</ion-label>
+        </div>
       </div>
     </div>
+
 
     <div class="header">
       <ion-label class="header-heading">Übersicht</ion-label>
@@ -47,46 +65,6 @@
         </agm-circle>
       </agm-map>
       <!-- <iframe src="https://unfallatlas.statistikportal.de/?BL=DE&Jhr=2020&Beteiligung=Personenschaden&scl=144448&E=689111&N=5336664" scrolling='no' style='height:100%; width:100%;'></iframe> -->
-    </div>
-
-    <div class="card-wrapper">
-      <div class="card label-card">
-        <div class="card-header">
-          <ion-label class="card-heading">Layer auswählen</ion-label>
-          <ion-label class="card-details-label">Details auswählen</ion-label>
-        </div>
-        <div class="card-item wifi">
-          <ion-label class="item-label">WLAN-Abdeckung</ion-label>
-          <ion-checkbox></ion-checkbox>
-        </div>
-        <div class="card-item safety">
-          <ion-label class="item-label">Safety-Score</ion-label>
-          <ion-checkbox></ion-checkbox>
-        </div>
-        <div class="card-item traffic">
-          <ion-label class="item-label">Verkehrslage</ion-label>
-          <ion-checkbox></ion-checkbox>
-        </div>
-      </div>
-
-      <div class="card stats-card">
-        <div class="card-header">
-          <ion-label class="card-heading">Statistiken</ion-label>
-          <ion-label class="card-details-label">Alle anzeigen</ion-label>
-        </div>
-        <div class="card-item wifi">
-          <ion-label class="item-label">WLAN-Abdeckung</ion-label>
-          <ion-label class="item-value">60k</ion-label>
-        </div>
-        <div class="card-item safety">
-          <ion-label class="item-label">Safety-Score</ion-label>
-          <ion-label class="item-value">16</ion-label>
-        </div>
-        <div class="card-item traffic">
-          <ion-label class="item-label">Verkehrslage</ion-label>
-          <ion-label class="item-value">zähfließend</ion-label>
-        </div>
-      </div>
     </div>
   </div>
 </ion-content>
