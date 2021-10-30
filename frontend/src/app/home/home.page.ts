@@ -4,6 +4,7 @@ import wifiObjects from '../../data/wifi_objects.json';
 import accessibility from '../../data/accessibility.json';
 import { initialize } from '@ionic/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import aqi from "../../../../backend/data/aqi.json"
 
 @Component({
   selector: 'app-home',
@@ -31,6 +32,7 @@ export class HomePage implements OnInit, OnDestroy{
   poiMap: google.maps.Map;
   accessibilityMap: google.maps.Map;
   wifiMap: google.maps.Map;
+  airMap: google.maps.Map;
 
   departure: string;
   destination: string;
@@ -68,7 +70,13 @@ export class HomePage implements OnInit, OnDestroy{
         center: { lat: this.lat, lng: this.lng },
         zoom: this.zoom,
       });
+
+      this.airMap = new google.maps.Map(document.getElementById('airMap') as HTMLElement, {
+        center: { lat: this.lat, lng: this.lng },
+        zoom: this.zoom,
+      });
       this.initializeWifiMap();
+      this.initializeAirMap();
 
       this.poiMap = new google.maps.Map(document.getElementById('accessibilityMap') as HTMLElement, {
         center: { lat: this.lat, lng: this.lng },
@@ -152,7 +160,6 @@ export class HomePage implements OnInit, OnDestroy{
   // }
 
   private initializeWifiMap() {
-    this.wifiMap.setCenter({lat: this.lat, lng: this.lng});
     for (const data of wifiObjects) {
       const pos = {lat: data.lat, lng: data.lng};
       const circle = new google.maps.Circle({
@@ -168,6 +175,26 @@ export class HomePage implements OnInit, OnDestroy{
     }
   }
 
+  private initializeAirMap() {
+    for (const data of aqi) {
+      const pos = {lat: parseFloat(data.lat), lng: parseFloat(data.lon)};
+      const circle = new google.maps.Circle({
+        strokeColor: this.translateValueIntoColor(Math.max(parseFloat(data.pm10), parseFloat(data.o3 ? data.o3 : "0"), parseFloat(data.no2 ? data.no2 : "0"), parseFloat(data.pm25 ? data.pm25 : "0"))),
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: this.translateValueIntoColor(Math.max(parseFloat(data.pm10), parseFloat(data.o3 ? data.o3 : "0"), parseFloat(data.no2 ? data.no2 : "0"), parseFloat(data.pm25 ? data.pm25 : "0"))),
+        fillOpacity: 0.35,
+        map: this.airMap,
+        center: pos,
+        radius: 2500,
+      });
+    }
+  }
+
+  get dataLoaded() {
+    return this.hotspots != null && this.accessibility != null;
+  }
+
   get wifiLayerActive() {
     return this.selectedLayer === 'wifi';
   }
@@ -178,5 +205,28 @@ export class HomePage implements OnInit, OnDestroy{
 
   get accessibilityLayerActive() {
     return this.selectedLayer === 'accessibility';
+  }
+
+  get airLayerActive() {
+    return this.selectedLayer === 'air';
+  }
+
+  translateValueIntoColor(value: number) {
+    if (value <= 50) {
+      return "green"
+    }
+    if (value <= 100) {
+      return "greenyellow"
+    }
+    if (value <= 200) {
+      return "yellow"
+    }
+    if (value <= 300) {
+      return "orange"
+    }
+    if (value <= 400) {
+      return "red"
+    }
+    return "darkred"
   }
 }
