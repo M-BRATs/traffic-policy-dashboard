@@ -54,8 +54,8 @@ export class HomePage implements OnInit, OnDestroy{
         center: { lat: this.lat, lng: this.lng },
         zoom: this.zoom,
       });
-
       this.createAccessibilityLayer();
+
       this.wifiMap = new google.maps.Map(document.getElementById('wifiMap') as HTMLElement, {
         center: { lat: this.lat, lng: this.lng },
         zoom: this.zoom,
@@ -126,7 +126,7 @@ export class HomePage implements OnInit, OnDestroy{
     this.wifiMap.setCenter({lat: this.lat, lng: this.lng});
     for (const data of wifiObjects) {
       const pos = {lat: data.lat, lng: data.lng};
-      let circle = new google.maps.Circle({
+      const circle = new google.maps.Circle({
         strokeColor: 'red',
         strokeOpacity: 0.8,
         strokeWeight: 2,

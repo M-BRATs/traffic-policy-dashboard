@@ -42,52 +42,16 @@
       </div>
     </div>
 
-    <div class="map-wrapper" *ngIf="dataLoaded && wifiLayerActive">
-      <!-- <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
-          <agm-circle *ngFor="let hotspot of hotspots"
-            [latitude]="hotspot.lat"
-            [longitude]="hotspot.lng"
-            [circleDraggable]="false"
-            fillColor="red"
-            [editable]="false"
-            [radius]="100"
-          ></agm-circle>
-      </agm-map> -->
-      <div id="wifiMap" class="map"></div>
+    <div class="map-wrapper">
+      <div id="wifiMap" [class.map]="wifiLayerActive" [class.hide-map]="!wifiLayerActive"></div>
     </div>
 
-    <div class="map-wrapper" *ngIf="dataLoaded && accessibilityLayerActive"> -->
-      <!-- <agm-map #heatMapAcc [latitude]="lat" [longitude]="lng" [zoom]="zoom" (mapReady)="this.onMapLoad($event)">
-
-      </agm-map> -->
-      <!-- <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
-          <agm-circle *ngFor="let hotspot of hotspots"
-            [latitude]="hotspot.lat"
-            [longitude]="hotspot.lng"
-            [circleDraggable]="false"
-            fillColor="red"
-            [editable]="false"
-            [radius]="100"
-          ></agm-circle> -->
-
-          <!-- <agm-rectangle *ngFor="let rectangle of rectangleSet"
-                [north]="rectangle.north"
-                [east]="rectangle.east"
-                [south]="rectangle.south"
-                [west]="rectangle.west"
-                [fillColor]="rectangle.fillColor"
-                [fillOpacity]="rectangle.fillOpacity"
-                [strokeColor]="rectangle.strokeColor"
-                [strokeOpacity]="rectangle.strokeOpacity"
-                [strokeWeight]="rectangle.strokeWeight"
-          >
-          </agm-rectangle> -->
-      <!-- </agm-map> -->
-      <div id="accessibilityMap" class="map"></div>
+    <div class="map-wrapper">
+      <div id="accessibilityMap" [class.map]="accessibilityLayerActive" [class.hide-map]="!accessibilityLayerActive"></div>
     </div>
 
-    <div class="map-wrapper" *ngIf="safetyLayerActive">
-      <iframe src="https://unfallatlas.statistikportal.de/?BL=DE&Jhr=2020&Beteiligung=Personenschaden&scl=144448&E=689111&N=5336664" scrolling='no' style='height:100%; width:100%;'></iframe>
+    <div class="map-wrapper">
+      <iframe src="https://unfallatlas.statistikportal.de/?BL=DE&Jhr=2020&Beteiligung=Personenschaden&scl=144448&E=689111&N=5336664" scrolling='no' [class.map]="safetyLayerActive" [class.hide-map]="!safetyLayerActive"></iframe>
     </div>
 
   </div>
