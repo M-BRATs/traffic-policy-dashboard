@@ -47,17 +47,50 @@ for (let i = 0; i < accMatrix.length - 1; i++) {
     }
 }
 
+const MONTH = 1;
+const DAY_OF_WEEK = 7;
+const HOUR = 8;
+
+const LOC = new google.maps.LatLng(48.2296360767711, 11.613991700121016)
+const IS_ROUTE = false;
+const IS_PLACE = true;
+const RADIUS = 250;
+
+
 const directionsService = new google.maps.DirectionsService()
 const directionsRenderer = new google.maps.DirectionsRenderer()
 directionsRenderer.setMap(map);
 directionsService.route({
-    origin: 'Marienplatz München',
-    destination: 'Fröttmanning München',
+    origin: 'Innsbrucker Ring München',
+    destination: 'Garching bei München',
     travelMode: google.maps.TravelMode.DRIVING,
 }, (result) => {
+    console.log(result);
+    directionsRenderer.setDirections(result);
     const path = google.maps.geometry.encoding.decodePath(result.routes[0].overview_polyline)
     const polyline = new google.maps.Polyline({path: path});
-    console.log(google.maps.geometry.poly.isLocationOnEdge(
-        new google.maps.LatLng(48.13559829862524, 11.58075939171983), polyline, 10e-1))
-    directionsRenderer.setDirections(result);
+    let safetyscore = 0;
+    for (const accident of accidents) {
+        const lat = parseFloat(accident['YGCSWGS84'].replace(',', '.'))
+        const lng = parseFloat(accident['XGCSWGS84'].replace(',', '.'))
+        const month = parseInt(accident['UMONAT']);
+        const dayOfWeek = parseInt(accident['UWOCHENTAG']);
+        const hour = parseInt(accident['USTUNDE']);
+        const accidentLoc = new google.maps.LatLng(lat, lng);
+        if (month === MONTH &&
+            dayOfWeek === DAY_OF_WEEK &&
+            hour === HOUR &&
+            (IS_ROUTE &&
+                google.maps.geometry.poly.isLocationOnEdge(accidentLoc, polyline, 0.0004)) &&
+            (IS_PLACE && google.maps.geometry.spherical.computeDistanceBetween (accidentLoc, LOC) <= RADIUS)) {
+            new google.maps.Marker({
+                position: new google.maps.LatLng(lat, lng),
+                map: map,
+            });
+            safetyscore += 4 - parseInt(accident['UKATEGORIE']);
+        }
+    }
+    const length = result.routes[0].legs[0].distance.value / 1000;
+    safetyscore /= length;
+    console.log(safetyscore);
 })
