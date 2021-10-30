@@ -25,9 +25,7 @@ export class HomePage implements OnInit, OnDestroy{
   lat = 48.1351;
   lng = 11.5820;
 
-  wifiLayerActive = true;
-  safetyLayerActive = false;
-  accessibilityLayerActive = false;
+  selectedLayer = 'wifi';
 
   wifiMap: google.maps.Map;
 
@@ -71,7 +69,7 @@ export class HomePage implements OnInit, OnDestroy{
     loader.load().then(() => {
       this.wifiMap = new google.maps.Map(document.getElementById('wifiMap') as HTMLElement, {
         center: { lat: this.lat, lng: this.lng },
-        zoom: 8,
+        zoom: this.zoom,
       });
       this.initializeWifiMap();
     });
@@ -116,19 +114,29 @@ export class HomePage implements OnInit, OnDestroy{
     return this.hotspots != null && this.accessibility != null;
   }
 
-  toggleLayer(layer: string) {
-    if (layer === 'wifi') {
-      this.wifiLayerActive = !this.wifiLayerActive;
-      this.safetyLayerActive = false;
-      this.accessibilityLayerActive = false;
-    } else if (layer === 'safety') {
-      this.wifiLayerActive = false;
-      this.safetyLayerActive = !this.safetyLayerActive;
-      this.accessibilityLayerActive = false;
-    } else if (layer === 'accessibility') {
-      this.wifiLayerActive = false;
-      this.safetyLayerActive = false;
-      this.accessibilityLayerActive = !this.accessibilityLayerActive;
-    }
+  // toggleLayer(layer: string) {
+  //   if (layer === 'wifi') {
+  //     this.wifiLayerActive = !this.wifiLayerActive;
+  //   } else if (layer === 'safety') {
+  //     this.safetyLayerActive = !this.safetyLayerActive;
+  //   } else if (layer === 'accessibility') {
+  //     this.accessibilityLayerActive = !this.accessibilityLayerActive;
+  //   }
+  // }
+
+  get wifiLayerActive() {
+    return this.selectedLayer === 'wifi';
+  };
+
+  get safetyLayerActive() {
+    return this.selectedLayer === 'safety';
+  };
+
+  get accessibilityLayerActive() {
+    return this.selectedLayer === 'accessibility';
+  };
+
+  selectLayer($event) {
+    this.selectedLayer = $event.target.value;
   }
 }
