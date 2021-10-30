@@ -2,8 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Loader } from '@googlemaps/js-api-loader';
 import wifiObjects from '../../data/wifi_objects.json';
 import accessibility from '../../data/accessibility.json';
-import { initialize } from '@ionic/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import accidents from '../../data/accidents.json';
+import {initialize} from '@ionic/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import aqi from '../..//data/aqi.json';
 
 @Component({
@@ -39,6 +40,9 @@ export class HomePage implements OnInit, OnDestroy{
 
   routeForm: FormGroup;
 
+
+  routeTolerance: number = 0.0004;
+  placeRadius: number = 250;
 
   constructor() {
 
@@ -101,43 +105,82 @@ export class HomePage implements OnInit, OnDestroy{
   }
 
   displayRoute() {
-    console.log(this.routeForm.get('start').value);
-    console.log(this.routeForm.get('destination').value);
+    const origin = this.routeForm.get('start').value;
+    const destination = this.routeForm.get('destination').value;
+    const filter = {
+      // filter by month, day of week, etc...
+    }
+    const gmaps = google.maps;
+
+    const directionService = new gmaps.DirectionsService();
+    const directionRenderer = new gmaps.DirectionsRenderer();
+    directionRenderer.setMap(this.poiMap);
+
+    directionService.route({
+      origin,
+      destination,
+      travelMode: gmaps.TravelMode.DRIVING,
+    }, (result) => {
+      directionRenderer.setDirections(result);
+      const path = gmaps.geometry.encoding.decodePath(result.routes[0].overview_polyline);
+      const polyline = new gmaps.Polyline({path});
+
+      // Check for accidents on route
+      for (const accident of accidents) {
+        const lat = parseFloat(accident['YGCSWGS84'].replace(',', '.'));
+        const lng = parseFloat(accident['XGCSWGS84'].replace(',', '.'));
+        const month = parseInt(accident['UMONAT']);
+        const dayOfWeek = parseInt(accident['UWOCHENTAG']);
+        const hour = parseInt(accident['USTUNDE']);
+        const location = new gmaps.LatLng(lat, lng);
+
+        if (gmaps.geometry.poly.isLocationOnEdge(location, polyline, this.routeTolerance)) {
+          this.createAccidentMarker(location);
+        }
+      }
+
+      for (const wifiHotspot of wifiObjects) {
+        const location = new gmaps.LatLng(wifiHotspot)
+        if (gmaps.geometry.poly.isLocationOnEdge(location, polyline, this.routeTolerance)) {
+          this.createWifiMarker(location);
+        }
+      }
+    });
   }
 
   private createAccessibilityLayer() {
-    for (let i = 0; i < this.accessibility.length -1; ++i) {
-        for (let k = 1; k < this.accessibility[i].length; ++k) {
-          const northEast = this.accessibility[i][k];
-          const northWest = this.accessibility[i][k-1];
-          const southEast = this.accessibility[i+1][k];
-          const southWest = this.accessibility[i+1][k-1];
-          const avgIntensity = (northEast.intensity + northWest.intensity + southEast.intensity + southWest.intensity) / 4;
-          const color = this.pickHex(avgIntensity);
-          const rectangleOptions = {
-            strokeOpacity: 0,
-            fillColor: 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')',
-            fillOpacity: 0.4,
-            bounds: new google.maps.LatLngBounds(
-              new google.maps.LatLng(southWest.location[0], southWest.location[1]),
-              new google.maps.LatLng(northEast.location[0], northEast.location[1]),
-            ),
-            map: this.accessibilityMap
-          };
-          const newRectangle = new google.maps.Rectangle(rectangleOptions);
-        }
+    for (let i = 0; i < this.accessibility.length - 1; ++i) {
+      for (let k = 1; k < this.accessibility[i].length; ++k) {
+        const northEast = this.accessibility[i][k];
+        const northWest = this.accessibility[i][k - 1];
+        const southEast = this.accessibility[i + 1][k];
+        const southWest = this.accessibility[i + 1][k - 1];
+        const avgIntensity = (northEast.intensity + northWest.intensity + southEast.intensity + southWest.intensity) / 4;
+        const color = this.pickHex(avgIntensity);
+        const rectangleOptions = {
+          strokeOpacity: 0,
+          fillColor: 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')',
+          fillOpacity: 0.4,
+          bounds: new google.maps.LatLngBounds(
+            new google.maps.LatLng(southWest.location[0], southWest.location[1]),
+            new google.maps.LatLng(northEast.location[0], northEast.location[1]),
+          ),
+          map: this.accessibilityMap
+        };
+        const newRectangle = new google.maps.Rectangle(rectangleOptions);
       }
+    }
   }
 
   private pickHex(weight: number) {
     weight = 1 - weight;
     if (weight <= 0.5) {
-        weight *= 2;
-        return [255, 255 * weight, 0];
+      weight *= 2;
+      return [255, 255 * weight, 0];
     } else {
-        weight -= 0.5;
-        weight *= 2;
-        return [255 * (1 - weight), 255, 0];
+      weight -= 0.5;
+      weight *= 2;
+      return [255 * (1 - weight), 255, 0];
     }
   }
 
@@ -173,27 +216,22 @@ export class HomePage implements OnInit, OnDestroy{
     }
   }
 
-  private translateValueIntoColor(value: number) {
-    if (value <= 50) {
-      return 'green';
-    }
-    if (value <= 100) {
-      return 'greenyellow';
-    }
-    if (value <= 200) {
-      return 'yellow';
-    }
-    if (value <= 300) {
-      return 'orange';
-    }
-    if (value <= 400) {
-      return 'red';
-    }
-    return 'darkred';
-  }
-
   get dataLoaded() {
     return this.hotspots != null && this.accessibility != null;
+  }
+
+  private createAccidentMarker(location) {
+    new google.maps.Marker({
+      position: location,
+      map: this.poiMap,
+    });
+  }
+
+  private createWifiMarker(location) {
+    new google.maps.Marker({
+      position: location,
+      map: this.poiMap,
+    })
   }
 
   get wifiLayerActive() {
@@ -210,6 +248,25 @@ export class HomePage implements OnInit, OnDestroy{
 
   get airLayerActive() {
     return this.selectedLayer === 'air';
+  }
+
+  translateValueIntoColor(value: number) {
+    if (value <= 50) {
+      return 'green'
+    }
+    if (value <= 100) {
+      return 'greenyellow'
+    }
+    if (value <= 200) {
+      return 'yellow'
+    }
+    if (value <= 300) {
+      return 'orange'
+    }
+    if (value <= 400) {
+      return 'red'
+    }
+    return 'darkred'
   }
 
   get poiLayerActive() {
