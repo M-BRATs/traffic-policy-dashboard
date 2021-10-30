@@ -4,7 +4,7 @@ import wifiObjects from '../../data/wifi_objects.json';
 import accessibility from '../../data/accessibility.json';
 import { initialize } from '@ionic/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import aqi from "../../../../backend/data/aqi.json"
+import aqi from '../..//data/aqi.json';
 
 @Component({
   selector: 'app-home',
@@ -141,24 +141,6 @@ export class HomePage implements OnInit, OnDestroy{
     }
   }
 
-  // public onMapLoad(mapInstance: google.maps.Map) {
-  //   this.map = mapInstance;
-  //   var heatmapData = [];
-  //   for (let entry of this.accessbility) {
-  //     heatmapData.push({location: new google.maps.LatLng(entry.location[0], entry.location[1]), weight: 1-entry.intensity})
-  //   }
-
-  //   this.heatmapAcc = new google.maps.visualization.HeatmapLayer({
-  //     map: mapInstance,
-  //     data: heatmapData,
-  //     radius: 20
-  //   });
-
-  //   google.maps.event.addListener(mapInstance, 'zoom_changed', function () {
-  //     this.heatmap.setOptions({radius: Math.floor(100*10)});
-  //   });
-  // }
-
   private initializeWifiMap() {
     for (const data of wifiObjects) {
       const pos = {lat: data.lat, lng: data.lng};
@@ -179,10 +161,10 @@ export class HomePage implements OnInit, OnDestroy{
     for (const data of aqi) {
       const pos = {lat: parseFloat(data.lat), lng: parseFloat(data.lon)};
       const circle = new google.maps.Circle({
-        strokeColor: this.translateValueIntoColor(Math.max(parseFloat(data.pm10), parseFloat(data.o3 ? data.o3 : "0"), parseFloat(data.no2 ? data.no2 : "0"), parseFloat(data.pm25 ? data.pm25 : "0"))),
+        strokeColor: this.translateValueIntoColor(Math.max(parseFloat(data.pm10), parseFloat(data.o3 ? data.o3 : '0'), parseFloat(data.no2 ? data.no2 : '0'), parseFloat(data.pm25 ? data.pm25 : '0'))),
         strokeOpacity: 0.8,
         strokeWeight: 2,
-        fillColor: this.translateValueIntoColor(Math.max(parseFloat(data.pm10), parseFloat(data.o3 ? data.o3 : "0"), parseFloat(data.no2 ? data.no2 : "0"), parseFloat(data.pm25 ? data.pm25 : "0"))),
+        fillColor: this.translateValueIntoColor(Math.max(parseFloat(data.pm10), parseFloat(data.o3 ? data.o3 : '0'), parseFloat(data.no2 ? data.no2 : '0'), parseFloat(data.pm25 ? data.pm25 : '0'))),
         fillOpacity: 0.35,
         map: this.airMap,
         center: pos,
@@ -213,20 +195,20 @@ export class HomePage implements OnInit, OnDestroy{
 
   translateValueIntoColor(value: number) {
     if (value <= 50) {
-      return "green"
+      return 'green'
     }
     if (value <= 100) {
-      return "greenyellow"
+      return 'greenyellow'
     }
     if (value <= 200) {
-      return "yellow"
+      return 'yellow'
     }
     if (value <= 300) {
-      return "orange"
+      return 'orange'
     }
     if (value <= 400) {
-      return "red"
+      return 'red'
     }
-    return "darkred"
+    return 'darkred'
   }
 }
