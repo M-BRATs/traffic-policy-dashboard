@@ -8,19 +8,15 @@
         </div>
         <div class="card-item wifi">
           <ion-label class="item-label">WLAN-Abdeckung</ion-label>
-          <ion-checkbox></ion-checkbox>
+          <ion-checkbox [checked]="wifiLayerActive" (ionChange)="toggleLayer('wifi')"></ion-checkbox>
         </div>
         <div class="card-item safety">
-          <ion-label class="item-label">Safety-Score</ion-label>
-          <ion-checkbox></ion-checkbox>
-        </div>
-        <div class="card-item traffic">
-          <ion-label class="item-label">Verkehrslage</ion-label>
-          <ion-checkbox></ion-checkbox>
+          <ion-label class="item-label">Verkehrssicherheit</ion-label>
+          <ion-checkbox [checked]="safetyLayerActive" (ionChange)="toggleLayer('safety')"></ion-checkbox>
         </div>
         <div class="card-item accessibility">
-          <ion-label class="item-label">Accessibility</ion-label>
-          <ion-checkbox></ion-checkbox>
+          <ion-label class="item-label">Verkehrsanbindung</ion-label>
+          <ion-checkbox [checked]="accessibilityLayerActive" (ionChange)="toggleLayer('accessibility')"></ion-checkbox>
         </div>
       </div>
 
@@ -52,20 +48,23 @@
       </div>
     </div>
 
-    <div class="map-wrapper">
+    <div class="map-wrapper" *ngIf="dataLoaded && !safetyLayerActive">
       <!-- <agm-map #heatMapAcc [latitude]="lat" [longitude]="lng" [zoom]="zoom" (mapReady)="this.onMapLoad($event)">
 
       </agm-map> -->
       <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
-          <!-- <agm-circle *ngFor="let hotspot of hotspots"
-                [latitude]="hotspot.lat"
-                [longitude]="hotspot.lng"
-                [circleDraggable]="false"
-                fillColor="red"
-                [editable]="false"
-                [radius]="100"
-          > -->
-          <agm-rectangle *ngFor="let rectangle of rectangleSet"
+          <div *ngIf="wifiLayerActive">
+            <agm-circle *ngFor="let hotspot of hotspots"
+              [latitude]="hotspot.lat"
+              [longitude]="hotspot.lng"
+              [circleDraggable]="false"
+              fillColor="red"
+              [editable]="false"
+              [radius]="100"
+            ></agm-circle> -->
+          </div>
+
+          <!-- <agm-rectangle *ngFor="let rectangle of rectangleSet"
                 [north]="rectangle.north"
                 [east]="rectangle.east"
                 [south]="rectangle.south"
@@ -76,9 +75,12 @@
                 [strokeOpacity]="rectangle.strokeOpacity"
                 [strokeWeight]="rectangle.strokeWeight"
           >
-        </agm-rectangle>
+          </agm-rectangle> -->
       </agm-map>
-      <!-- <iframe src="https://unfallatlas.statistikportal.de/?BL=DE&Jhr=2020&Beteiligung=Personenschaden&scl=144448&E=689111&N=5336664" scrolling='no' style='height:100%; width:100%;'></iframe> -->
     </div>
+    <div class="map-wrapper" *ngIf="safetyLayerActive">
+      <iframe src="https://unfallatlas.statistikportal.de/?BL=DE&Jhr=2020&Beteiligung=Personenschaden&scl=144448&E=689111&N=5336664" scrolling='no' style='height:100%; width:100%;'></iframe>
+    </div>
+
   </div>
 </ion-content>
