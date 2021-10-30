@@ -1,6 +1,5 @@
 console.log(accMatrix)
 
-
 let map = new google.maps.Map(
     document.getElementById("map"), {
         center: {lng: 11.613991700121016, lat: 48.2296360767711},
@@ -54,7 +53,7 @@ const HOUR = 8;
 const LOC = new google.maps.LatLng(48.2296360767711, 11.613991700121016)
 const IS_ROUTE = false;
 const IS_PLACE = true;
-const RADIUS = 250;
+const RADIUS = 1000;
 
 
 const directionsService = new google.maps.DirectionsService()
@@ -77,14 +76,15 @@ directionsService.route({
         const dayOfWeek = parseInt(accident['UWOCHENTAG']);
         const hour = parseInt(accident['USTUNDE']);
         const accidentLoc = new google.maps.LatLng(lat, lng);
-        if (month === MONTH &&
-            dayOfWeek === DAY_OF_WEEK &&
-            hour === HOUR &&
-            (IS_ROUTE &&
-                google.maps.geometry.poly.isLocationOnEdge(accidentLoc, polyline, 0.0004)) &&
-            (IS_PLACE && google.maps.geometry.spherical.computeDistanceBetween (accidentLoc, LOC) <= RADIUS)) {
+        console.log(google.maps.geometry.spherical.computeDistanceBetween(accidentLoc, LOC))
+        if (//month === MONTH &&
+            //dayOfWeek === DAY_OF_WEEK &&
+            //hour === HOUR &&
+            ((IS_ROUTE &&
+                google.maps.geometry.poly.isLocationOnEdge(accidentLoc, polyline, 0.0004)) ||
+            (IS_PLACE && google.maps.geometry.spherical.computeDistanceBetween (accidentLoc, LOC) <= RADIUS))) {
             new google.maps.Marker({
-                position: new google.maps.LatLng(lat, lng),
+                position: accidentLoc,
                 map: map,
             });
             safetyscore += 4 - parseInt(accident['UKATEGORIE']);
