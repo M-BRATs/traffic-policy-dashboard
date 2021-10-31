@@ -8,7 +8,7 @@
         </div>
         <ion-radio-group [value]="selectedLayer" (ionChange)="selectLayer($event)">
           <div class="card-item poi">
-            <ion-label class="item-label">POIs</ion-label>
+            <ion-label class="item-label">Routes and Places</ion-label>
             <ion-radio value="poi"></ion-radio>
           </div>
           <div class="card-item accessibility">
@@ -66,7 +66,7 @@
               <ion-img class="legend-icon" src="../../assets/svg/red_accident.svg"></ion-img>
               <ion-label class="legend-label">Death</ion-label>
             </div>
-          </div>
+          </div>F
         <div class="legend poi" *ngIf="accessibilityLayerActive">
             <div class="legend-wrapper">
               <ion-img class="legend-icon" src="../../assets/svg/green_access.svg"></ion-img>
