@@ -267,9 +267,10 @@
 
 .legend-label {
   display: inline-block;
-  width: 80px;
   color: var(--text-inverted);
   white-space: nowrap;
+  min-width: max-content;
+  margin-right: 0.2em;
 }
 
 .legend-value {
