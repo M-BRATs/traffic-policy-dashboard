@@ -196,6 +196,10 @@
         </div>
       </div>
       <div class="legend poi" *ngIf="airLayerActive">
+        <div class="legend-wrapper" *ngIf="this.selectedAQI != null">
+          <ion-label class="legend-label">Location:</ion-label>
+          <ion-label class="legend-label">{{this.selectedAQI['name']}}</ion-label>
+        </div>
         <div class="legend-wrapper" *ngIf="pm25Active">
           <ion-label class="legend-label">PM25:</ion-label>
           <ion-label class="legend-label">{{this.selectedAQI['pm25']}}</ion-label>
