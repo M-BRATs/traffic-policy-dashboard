@@ -42,8 +42,9 @@ export class HomePage implements OnInit, OnDestroy {
   placeForm: FormGroup;
 
   routeToleranceAccidents = 0.0002;
-  routeToleranceWifi = 0.0009;
+  routeToleranceWifi = 0.0005;
   placeRadius = 250;
+  wifiRadius = 50;
 
   poiLightInjuryStat;
   poiSevereInjuryStat;
@@ -348,7 +349,7 @@ export class HomePage implements OnInit, OnDestroy {
       fillOpacity: 0.35,
       map,
       center: location,
-      radius: 100,
+      radius: this.wifiRadius,
     });
   }
 
