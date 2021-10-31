@@ -160,6 +160,10 @@ export class HomePage implements OnInit, OnDestroy {
       const path = gmaps.geometry.encoding.decodePath(result.routes[0].overview_polyline);
       const polyline = new gmaps.Polyline({path});
 
+      let safetyscore = 0;
+      let length = result.routes[0].legs[0].distance.value;
+
+
       // Check for accidents on route
       for (const accident of accidents) {
         const lat = parseFloat(accident['YGCSWGS84'].replace(',', '.'));
@@ -171,9 +175,14 @@ export class HomePage implements OnInit, OnDestroy {
         const location = new gmaps.LatLng(lat, lng);
 
         if (gmaps.geometry.poly.isLocationOnEdge(location, polyline, this.routeToleranceAccidents)) {
+          safetyscore += 4 - category;
           this.accidentPois.push(this.createAccidentMarker(location, category));
         }
       }
+
+      safetyscore /= length;
+      safetyscore *= 1000;
+      console.log(safetyscore);
 
       for (const wifiHotspot of wifiObjects) {
         const location = new gmaps.LatLng(wifiHotspot);
@@ -206,7 +215,7 @@ export class HomePage implements OnInit, OnDestroy {
           title: results[0].formatted_address,
         });
 
-        // Check for accidents on route
+        // Check for accidents in vicinity
         for (const accident of accidents) {
           const lat = parseFloat(accident['YGCSWGS84'].replace(',', '.'));
           const lng = parseFloat(accident['XGCSWGS84'].replace(',', '.'));

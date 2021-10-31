@@ -46,5 +46,6 @@ def get_coordinates():
 if __name__ == '__main__':
     # get_coordinates()
     wifi_hotspots = scrape_wifi_hotspots()
+    wifi_hotspots = list(map(lambda h: {'lat': h[0], 'lng': h[1]}, wifi_hotspots))
     with open(PATH_TO_COORDINATES, 'w') as json_file:
         json.dump(wifi_hotspots, json_file)
