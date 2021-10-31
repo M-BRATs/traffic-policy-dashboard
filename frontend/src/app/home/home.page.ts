@@ -22,7 +22,7 @@ export class HomePage implements OnInit, OnDestroy {
   lat = 48.1351;
   lng = 11.5820;
 
-  selectedLayer = 'accessibility';
+  selectedLayer = 'poi';
 
   poiMap: google.maps.Map;
   accessibilityMap: google.maps.Map;
@@ -33,11 +33,12 @@ export class HomePage implements OnInit, OnDestroy {
   directionRenderer: google.maps.DirectionsRenderer;
   wifiPois: google.maps.Circle[] = [];
   accidentPois: google.maps.Circle[] = [];
+  placeMarker: google.maps.Marker;
 
   routeForm: FormGroup;
   placeForm: FormGroup;
 
-  routeTolerance = 0.0004;
+  routeTolerance = 0.0002;
   placeRadius = 250;
 
   wifiStat;
@@ -169,6 +170,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   showPlacePois() {
     this.clearPois();
+    this.selectedLayer = 'poi';
 
     let place = this.placeForm.get('place').value;
     if (!place.includes('München')) place += ' München';
@@ -178,6 +180,16 @@ export class HomePage implements OnInit, OnDestroy {
     geocoder.geocode({'address': place}, (results, status) => {
       if (status === 'OK') {
         place = results[0].geometry.location;
+
+        this.poiMap.setCenter(place);
+        this.poiMap.setZoom(18);
+
+        this.placeMarker = new google.maps.Marker({
+          position: place,
+          map: this.poiMap,
+          title: results[0].formatted_address,
+        });
+
         // Check for accidents on route
         for (const accident of accidents) {
           const lat = parseFloat(accident['YGCSWGS84'].replace(',', '.'));
@@ -204,6 +216,11 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   private clearPois() {
+    if (this.placeMarker) {
+      this.poiMap.setZoom(this.zoom);
+      this.placeMarker.setMap(null);
+    }
+
     for (const wifiCircle of this.wifiPois) {
       wifiCircle.setMap(null);
     }
@@ -212,6 +229,7 @@ export class HomePage implements OnInit, OnDestroy {
       accidentCircle.setMap(null);
     }
 
+    this.placeMarker = null;
     this.wifiPois = [];
     this.accidentPois = [];
   }
