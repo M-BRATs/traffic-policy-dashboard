@@ -271,5 +271,13 @@
 }
 
 .floating-container {
-
+  position: absolute;
+  right: 5em;
+  top: 8em;
+  background-color: white;
+  opacity: 0.8;
+  border-radius: 1em;
+  padding: 2em;
+  height: 20em;
+  width: 10em;
 }
