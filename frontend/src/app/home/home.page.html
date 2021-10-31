@@ -72,6 +72,10 @@
             <ion-icon name="radio-button-off" style="color: red;"></ion-icon>
             <ion-label class="legend-label">Death</ion-label>
           </div>
+          <div class="legend-wrapper">
+            <ion-icon name="radio-button-off" style="color: deepskyblue;"></ion-icon>
+            <ion-label class="legend-label">Public Wifi</ion-label>
+          </div>
         </div>
         <div class="legend poi" *ngIf="accessibilityLayerActive">
           <div class="legend-wrapper">
@@ -144,9 +148,9 @@
         scrolling='no' [class.map]="safetyLayerActive" [class.hide-map]="!safetyLayerActive"></iframe>
     </div>
 
-    <div class="floating-container" *ngIf="!safetyLayerActive">
+    <div class="floating-container" *ngIf="!safetyLayerActive && (placeActive || routeActive || wifiLayerActive || accessibilityLayerActive)">
       <div class="card-header">
-        <ion-label class="card-heading">Statistics</ion-label>
+        <ion-label class="card-heading">Stats</ion-label>
       </div>
       <div class="legend poi" *ngIf="poiLayerActive">
          <div class="legend-wrapper" *ngIf="routeActive">
@@ -158,15 +162,15 @@
           <ion-label class="legend-label">{{this.routeDurationStat}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="routeActive ||placeActive">
-          <ion-label class="legend-label">Light injury:</ion-label>
+          <ion-label class="legend-label">Light injuries:</ion-label>
           <ion-label class="legend-label">{{this.poiLightInjuryStat}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="routeActive ||placeActive">
-          <ion-label class="legend-label">Severe injury:</ion-label>
+          <ion-label class="legend-label">Severe injuries:</ion-label>
           <ion-label class="legend-label">{{this.poiSevereInjuryStat}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="routeActive ||placeActive">
-          <ion-label class="legend-label">Death:</ion-label>
+          <ion-label class="legend-label">Deaths:</ion-label>
           <ion-label class="legend-label">{{this.poiDeathStat}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="routeActive">
@@ -174,7 +178,7 @@
           <ion-label class="legend-label">{{this.routeSafetyStat}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="routeActive || placeActive">
-          <ion-label class="legend-label">Wifi Hotspots nearby:</ion-label>
+          <ion-label class="legend-label">Wifi hotspots nearby:</ion-label>
           <ion-label class="legend-label">{{this.poiWifiStat}}</ion-label>
         </div>
       </div>
