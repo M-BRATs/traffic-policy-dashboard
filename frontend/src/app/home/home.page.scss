@@ -255,22 +255,23 @@
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  margin-bottom: 0.5em;
 }
 
 .legend {
   display: flex;
   flex-direction: column;
+  ion-icon {
+    margin-top: 3px;
+  }
 }
 
 .legend-label {
   flex-grow: 5;
   color: var(--text-inverted);
-  width: 50%;
+  margin-left: 0.5em;
 }
 
-.legend-icon {
-  width: 50%;
-}
 
 .floating-container {
   position: absolute;
