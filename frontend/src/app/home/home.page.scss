@@ -231,6 +231,8 @@
     border-radius: 10px;
     margin: 0.2em 0;
     font-size: var(--size-small);
+    color: var(--text-inverted);
+
   }
 }
 
@@ -271,5 +273,13 @@
 }
 
 .floating-container {
-
+  position: absolute;
+  right: 5em;
+  top: 8em;
+  background-color: white;
+  opacity: 0.8;
+  border-radius: 1em;
+  padding: 2em;
+  height: 20em;
+  width: 10em;
 }
