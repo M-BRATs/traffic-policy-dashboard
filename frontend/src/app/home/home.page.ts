@@ -339,7 +339,7 @@ export class HomePage implements OnInit, OnDestroy {
         fillOpacity: 0.35,
         map: this.airMap,
         center: pos,
-        radius: 2500,
+        radius: 625,
       });
     }
   }
@@ -349,22 +349,18 @@ export class HomePage implements OnInit, OnDestroy {
       return 'green';
     }
     if (value <= 100) {
-      return 'yellowgreen';
-    }
-    if (value <= 200) {
       return 'yellow';
     }
-    if (value <= 300) {
+    if (value <= 200) {
       return 'orange';
     }
-    if (value <= 400) {
+    if (value <= 300) {
       return 'red';
     }
-    return 'darkred';
-  }
-
-  get dataLoaded() {
-    return this.hotspots != null && this.accessibility != null;
+    if (value <= 400) {
+      return 'darkred';
+    }
+    return 'black';
   }
 
   get wifiLayerActive() {
