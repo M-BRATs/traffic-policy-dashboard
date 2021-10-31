@@ -13,3 +13,4 @@ if __name__ == '__main__':
     app.run()
 
 wifi_locations.scrape_wifi_hotspots()
+

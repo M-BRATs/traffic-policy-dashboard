@@ -44,11 +44,14 @@ export class HomePage implements OnInit, OnDestroy {
   routeToleranceWifi = 0.0009;
   placeRadius = 250;
 
+  poiLightInjuryStat;
+  poiSevereInjuryStat;
+  poiDeathStat;
+  poiWifiStat;
   wifiStat;
-  airStat;
-  safetyStat;
-  accStat = 20;
-  poiStat = 15; //TODO: safetyScore
+  accessibilityStat;
+  routeDistanceStat;
+  routeDurationStat;
 
   constructor() {
 
@@ -66,10 +69,10 @@ export class HomePage implements OnInit, OnDestroy {
 
     loader.load().then(() => {
       this.directionService = new google.maps.DirectionsService();
-    	this.directionRenderer = new google.maps.DirectionsRenderer();
+      this.directionRenderer = new google.maps.DirectionsRenderer();
 
       this.accessibilityMap = new google.maps.Map(document.getElementById('accessibilityMap') as HTMLElement, {
-        center: { lat: this.lat, lng: this.lng },
+        center: {lat: this.lat, lng: this.lng},
         zoom: this.zoom,
         streetViewControl: false,
       });
@@ -118,8 +121,6 @@ export class HomePage implements OnInit, OnDestroy {
     });
 
     this.wifiStat = wifiObjects.length;
-    this.accStat = accessibility.length;
-    this.airStat = "Perfect"
   }
 
   selectLayer($event) {
@@ -162,7 +163,15 @@ export class HomePage implements OnInit, OnDestroy {
 
       let safetyscore = 0;
       let length = result.routes[0].legs[0].distance.value;
+      let distanceText = result.routes[0].legs[0].distance.text;
+      let durationText = result.routes[0].legs[0].duration.text;
 
+      this.routeDistanceStat = distanceText;
+      this.routeDurationStat = durationText;
+
+      let lightInjuries = 0;
+      let severeInjuries = 0;
+      let deaths = 0;
 
       // Check for accidents on route
       for (const accident of accidents) {
@@ -176,20 +185,40 @@ export class HomePage implements OnInit, OnDestroy {
 
         if (gmaps.geometry.poly.isLocationOnEdge(location, polyline, this.routeToleranceAccidents)) {
           safetyscore += 4 - category;
+          switch (category) {
+            case 1:
+              deaths++;
+              break;
+            case 2:
+              severeInjuries++;
+              break;
+            case 3:
+              lightInjuries++;
+              break;
+          }
           this.accidentPois.push(this.createAccidentMarker(location, category));
         }
       }
+
+      this.poiLightInjuryStat = lightInjuries;
+      this.poiSevereInjuryStat = severeInjuries;
+      this.poiDeathStat = deaths;
 
       safetyscore /= length;
       safetyscore *= 1000;
       console.log(safetyscore);
 
+      let wifiHotspots = 0;
+
       for (const wifiHotspot of wifiObjects) {
         const location = new gmaps.LatLng(wifiHotspot);
         if (gmaps.geometry.poly.isLocationOnEdge(location, polyline, this.routeToleranceWifi)) {
+          wifiHotspots++;
           this.wifiPois.push(this.createWifiMarker(location, this.poiMap));
         }
       }
+
+      this.poiWifiStat = wifiHotspots;
     });
   }
 
@@ -215,6 +244,10 @@ export class HomePage implements OnInit, OnDestroy {
           title: results[0].formatted_address,
         });
 
+        let lightInjuries = 0;
+        let severeInjuries = 0;
+        let deaths = 0;
+
         // Check for accidents in vicinity
         for (const accident of accidents) {
           const lat = parseFloat(accident['YGCSWGS84'].replace(',', '.'));
@@ -226,16 +259,36 @@ export class HomePage implements OnInit, OnDestroy {
           const location = new gmaps.LatLng(lat, lng);
 
           if (gmaps.geometry.spherical.computeDistanceBetween(location, place) <= this.placeRadius) {
+            switch (category) {
+              case 1:
+                deaths++;
+                break;
+              case 2:
+                severeInjuries++;
+                break;
+              case 3:
+                lightInjuries++;
+                break;
+            }
             this.accidentPois.push(this.createAccidentMarker(location, category));
           }
         }
 
+        this.poiLightInjuryStat = lightInjuries;
+        this.poiSevereInjuryStat = severeInjuries;
+        this.poiDeathStat = deaths;
+
+        let wifiHotspots = 0;
+
         for (const wifiHotspot of wifiObjects) {
           const location = new gmaps.LatLng(wifiHotspot);
           if (gmaps.geometry.spherical.computeDistanceBetween(location, place) <= this.placeRadius) {
+            wifiHotspots++;
             this.wifiPois.push(this.createWifiMarker(location, this.poiMap));
           }
         }
+
+        this.poiWifiStat = wifiHotspots;
       }
     });
   }
@@ -262,12 +315,18 @@ export class HomePage implements OnInit, OnDestroy {
   private createAccidentMarker(location, category = 1) {
     let fillColor;
     switch (category) {
-      case 1: fillColor = 'red'; break;
-      case 2: fillColor = 'orangered'; break;
-      case 3: fillColor = 'orange'; break;
+      case 1:
+        fillColor = 'red';
+        break;
+      case 2:
+        fillColor = 'orangered';
+        break;
+      case 3:
+        fillColor = 'orange';
+        break;
     }
     return new google.maps.Circle({
-      strokeColor:  fillColor,
+      strokeColor: fillColor,
       strokeOpacity: 0.8,
       strokeWeight: 2,
       fillColor,
@@ -280,15 +339,15 @@ export class HomePage implements OnInit, OnDestroy {
 
   private createWifiMarker(location: google.maps.LatLng, map: google.maps.Map) {
     return new google.maps.Circle({
-        strokeColor: 'deepskyblue',
-        strokeOpacity: 0.5,
-        strokeWeight: 2,
-        fillColor: 'DeepSkyBlue',
-        fillOpacity: 0.35,
-        map,
-        center: location,
-        radius: 100,
-      });
+      strokeColor: 'deepskyblue',
+      strokeOpacity: 0.5,
+      strokeWeight: 2,
+      fillColor: 'DeepSkyBlue',
+      fillOpacity: 0.35,
+      map,
+      center: location,
+      radius: 100,
+    });
   }
 
 
@@ -396,5 +455,13 @@ export class HomePage implements OnInit, OnDestroy {
 
   get poiLayerActive() {
     return this.selectedLayer === 'poi';
+  }
+
+  get routeActive() {
+    return this.directionRenderer != null && this.directionRenderer.getDirections() != null
+  }
+
+  get placeActive() {
+    return this.placeMarker != null;
   }
 }
