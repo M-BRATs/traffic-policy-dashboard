@@ -3,9 +3,9 @@ import {Loader} from '@googlemaps/js-api-loader';
 import wifiObjects from '../../data/wifi_objects.json';
 import accessibility from '../../data/accessibility.json';
 import accidents from '../../data/accidents.json';
-import {initialize} from '@ionic/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import aqi from '../..//data/aqi.json';
+import aqi from '../../data/aqi.json';
+import {min} from "rxjs/operators";
 
 @Component({
   selector: 'app-home',
@@ -52,6 +52,7 @@ export class HomePage implements OnInit, OnDestroy {
   accessibilityStat;
   routeDistanceStat;
   routeDurationStat;
+  routeSafetyStat;
 
   constructor() {
 
@@ -361,6 +362,7 @@ export class HomePage implements OnInit, OnDestroy {
         const avgIntensity = (northEast.intensity + northWest.intensity + southEast.intensity + southWest.intensity) / 4;
         const color = this.pickHex(avgIntensity);
         const rectangleOptions = {
+          clickable: true,
           strokeOpacity: 0,
           fillColor: 'rgb(' + color[0] + ',' + color[1] + ',' + color[2] + ')',
           fillOpacity: 0.4,
@@ -371,6 +373,18 @@ export class HomePage implements OnInit, OnDestroy {
           map: this.accessibilityMap
         };
         const newRectangle = new google.maps.Rectangle(rectangleOptions);
+        newRectangle.addListener('click', (event) => {
+          let seconds = northEast.dist_seconds;
+          if (seconds === -1) {
+            this.accessibilityStat = "No Route";
+          } else {
+            const hours = Math.floor(seconds / 3600);
+            seconds -= hours * 3600;
+            const minutes = Math.floor(seconds / 60);
+            seconds -= minutes * 60;
+            this.accessibilityStat = hours + "h " + minutes + "m";
+          }
+        });
       }
     }
   }
@@ -389,6 +403,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   private initializeWifiMap() {
+    this.wifiStat = this.hotspots.length;
     for (const hotspot of this.hotspots) {
       const pos = new google.maps.LatLng(hotspot.lat, hotspot.lng);
       this.createWifiMarker(pos, this.wifiMap);
