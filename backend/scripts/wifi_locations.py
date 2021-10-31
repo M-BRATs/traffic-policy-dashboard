@@ -11,7 +11,7 @@ PATH_TO_COORDINATES = (PATH_TO_SCRIPTS / "../data/wifi.json").resolve()
 
 def scrape_wifi_hotspots():
     coordinates = []
-    for i in range(1, 3):
+    for i in range(1, 4):
         data = urllib.request.urlopen("https://www.muenchen.de/leben/wlan-hotspot_{}.html".format(i)).read()
         soup = BeautifulSoup(data, 'html.parser')
         streets = seq(soup.find_all('span', class_='item__url item__url--address str')) \
