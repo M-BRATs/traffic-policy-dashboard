@@ -156,69 +156,69 @@
       <div class="legend poi" *ngIf="poiLayerActive">
         <div class="legend-wrapper" *ngIf="routeActive">
           <ion-label class="legend-label">Distance:</ion-label>
-          <ion-label class="legend-label">{{this.routeDistanceStat}}</ion-label>
+          <ion-label class="legend-value">{{this.routeDistanceStat}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="routeActive">
           <ion-label class="legend-label">Duration:</ion-label>
-          <ion-label class="legend-label">{{this.routeDurationStat}}</ion-label>
+          <ion-label class="legend-value">{{this.routeDurationStat}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="routeActive ||placeActive">
           <ion-label class="legend-label">Light injuries:</ion-label>
-          <ion-label class="legend-label">{{this.poiLightInjuryStat}}</ion-label>
+          <ion-label class="legend-value">{{this.poiLightInjuryStat}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="routeActive ||placeActive">
           <ion-label class="legend-label">Severe injuries:</ion-label>
-          <ion-label class="legend-label">{{this.poiSevereInjuryStat}}</ion-label>
+          <ion-label class="legend-value">{{this.poiSevereInjuryStat}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="routeActive ||placeActive">
           <ion-label class="legend-label">Deaths:</ion-label>
-          <ion-label class="legend-label">{{this.poiDeathStat}}</ion-label>
+          <ion-label class="legend-value">{{this.poiDeathStat}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="routeActive">
           <ion-label class="legend-label">Safety Score:</ion-label>
-          <ion-label class="legend-label">{{this.routeSafetyStat}}</ion-label>
+          <ion-label class="legend-value">{{this.routeSafetyStat}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="routeActive || placeActive">
           <ion-label class="legend-label">Wifi hotspots nearby:</ion-label>
-          <ion-label class="legend-label">{{this.poiWifiStat}}</ion-label>
+          <ion-label class="legend-value">{{this.poiWifiStat}}</ion-label>
         </div>
       </div>
       <div class="legend poi" *ngIf="wifiLayerActive">
         <div class="legend-wrapper">
           <ion-label class="legend-label">Total count:</ion-label>
-          <ion-label class="legend-label">{{this.wifiStat}}</ion-label>
+          <ion-label class="legend-value">{{this.wifiStat}}</ion-label>
         </div>
       </div>
       <div class="legend poi" *ngIf="accessibilityLayerActive">
         <div class="legend-wrapper">
           <ion-label class="legend-label">Duration to centre:</ion-label>
-          <ion-label class="legend-label">{{this.accessibilityStat}}</ion-label>
+          <ion-label class="legend-value">{{this.accessibilityStat}}</ion-label>
         </div>
       </div>
       <div class="legend poi" *ngIf="airLayerActive">
         <div class="legend-wrapper" *ngIf="this.selectedAQI != null">
           <ion-label class="legend-label">Location:</ion-label>
-          <ion-label class="legend-label">{{this.selectedAQI['name']}}</ion-label>
+          <ion-label class="legend-value">{{this.selectedAQI['name']}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="pm25Active">
           <ion-label class="legend-label">PM25:</ion-label>
-          <ion-label class="legend-label">{{this.selectedAQI['pm25']}}</ion-label>
+          <ion-label class="legend-value">{{this.selectedAQI['pm25']}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="pm10Active">
           <ion-label class="legend-label">PM10:</ion-label>
-          <ion-label class="legend-label">{{this.selectedAQI['pm10']}}</ion-label>
+          <ion-label class="legend-value">{{this.selectedAQI['pm10']}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="pm1Active">
           <ion-label class="legend-label">PM1:</ion-label>
-          <ion-label class="legend-label">{{this.selectedAQI['pm1']}}</ion-label>
+          <ion-label class="legend-value">{{this.selectedAQI['pm1']}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="o3Active">
           <ion-label class="legend-label">O3:</ion-label>
-          <ion-label class="legend-label">{{this.selectedAQI['o3']}}</ion-label>
+          <ion-label class="legend-value">{{this.selectedAQI['o3']}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="no2Active">
           <ion-label class="legend-label">NO2:</ion-label>
-          <ion-label class="legend-label">{{this.selectedAQI['no2']}}</ion-label>
+          <ion-label class="legend-value">{{this.selectedAQI['no2']}}</ion-label>
         </div>
       </div>
     </div>
