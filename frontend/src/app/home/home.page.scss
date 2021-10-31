@@ -248,3 +248,24 @@
     transition: 0.5s all ease-out;
   }
 }
+
+.legend-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+}
+
+.legend-label {
+  flex-grow: 5;
+  color: var(--text-inverted);
+  width: 50%;
+}
+
+.legend-icon {
+  width: 50%;
+}

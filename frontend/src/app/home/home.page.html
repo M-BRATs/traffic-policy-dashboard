@@ -51,11 +51,21 @@
 
       <div class="card stats-card">
         <div class="card-header">
-          <ion-label class="card-heading">Statistics</ion-label>
+          <ion-label class="card-heading">Legend</ion-label>
         </div>
-          <div class="card-item poi" *ngIf="poiLayerActive">
-            <ion-label class="item-label">POIs</ion-label>
-            <ion-label class="item-value">{{ this.poiStat }}</ion-label>
+          <div class="legend poi" *ngIf="poiLayerActive">
+            <div class="legend-wrapper">
+              <ion-img class="legend-icon" src="../../assets/orange_accident.svg"></ion-img>
+              <ion-label class="legend-label">light injury</ion-label>
+            </div>
+            <div class="legend-wrapper">
+              <ion-img class="legend-icon" src="../../assets/orangered_accident.svg"></ion-img>
+              <ion-label class="legend-label">severe injury</ion-label>
+            </div>
+            <div class="legend-wrapper">
+              <ion-img class="legend-icon" src="../../assets/red_accident.svg"></ion-img>
+              <ion-label class="legend-label">death</ion-label>
+            </div>
           </div>
           <div class="card-item accessibility" *ngIf="accessibilityLayerActive">
             <ion-label class="item-label">Accessibility</ion-label>
