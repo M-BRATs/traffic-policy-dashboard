@@ -31,13 +31,11 @@ export class HomePage implements OnInit, OnDestroy {
 
   directionService: google.maps.DirectionsService;
   directionRenderer: google.maps.DirectionsRenderer;
-
-  departure: string;
-  destination: string;
+  wifiPois: google.maps.Circle[] = [];
+  accidentPois: google.maps.Circle[] = [];
 
   routeForm: FormGroup;
   placeForm: FormGroup;
-
 
   routeTolerance = 0.0004;
   placeRadius = 250;
@@ -90,6 +88,8 @@ export class HomePage implements OnInit, OnDestroy {
         streetViewControl: false,
       });
 
+      this.directionRenderer.setMap(this.poiMap);
+
       this.initializeWifiMap();
       this.initializeAccessibilityLayer();
       this.initializeAirMap();
@@ -123,6 +123,8 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   displayRoute() {
+    this.clearPois();
+
     let origin: string = this.routeForm.get('start').value;
     let destination: string = this.routeForm.get('destination').value;
     if (!origin.includes('München')) origin += ' München';
@@ -131,7 +133,6 @@ export class HomePage implements OnInit, OnDestroy {
       // filter by month, day of week, etc...
     }
     const gmaps = google.maps;
-    this.directionRenderer.setMap(this.poiMap);
 
     this.directionService.route({
       origin,
@@ -153,28 +154,30 @@ export class HomePage implements OnInit, OnDestroy {
         const location = new gmaps.LatLng(lat, lng);
 
         if (gmaps.geometry.poly.isLocationOnEdge(location, polyline, this.routeTolerance)) {
-          this.createAccidentMarker(location, category);
+          this.accidentPois.push(this.createAccidentMarker(location, category));
         }
       }
 
       for (const wifiHotspot of wifiObjects) {
-        const location = new gmaps.LatLng(wifiHotspot)
+        const location = new gmaps.LatLng(wifiHotspot);
         if (gmaps.geometry.poly.isLocationOnEdge(location, polyline, this.routeTolerance)) {
-          this.createWifiMarker(location, this.poiMap);
+          this.wifiPois.push(this.createWifiMarker(location, this.poiMap));
         }
       }
     });
   }
 
   showPlacePois() {
+    this.clearPois();
+
     let place = this.placeForm.get('place').value;
     if (!place.includes('München')) place += ' München';
     const gmaps = google.maps;
 
     const geocoder = new gmaps.Geocoder();
     geocoder.geocode({'address': place}, (results, status) => {
-      if (status == 'OK') {
-        place = results[0].geometry.location
+      if (status === 'OK') {
+        place = results[0].geometry.location;
         // Check for accidents on route
         for (const accident of accidents) {
           const lat = parseFloat(accident['YGCSWGS84'].replace(',', '.'));
@@ -186,18 +189,31 @@ export class HomePage implements OnInit, OnDestroy {
           const location = new gmaps.LatLng(lat, lng);
 
           if (gmaps.geometry.spherical.computeDistanceBetween(location, place) <= this.placeRadius) {
-            this.createAccidentMarker(location, category);
+            this.accidentPois.push(this.createAccidentMarker(location, category));
           }
         }
 
         for (const wifiHotspot of wifiObjects) {
-          const location = new gmaps.LatLng(wifiHotspot)
+          const location = new gmaps.LatLng(wifiHotspot);
           if (gmaps.geometry.spherical.computeDistanceBetween(location, place) <= this.placeRadius) {
-            this.createWifiMarker(location, this.poiMap);
+            this.wifiPois.push(this.createWifiMarker(location, this.poiMap));
           }
         }
       }
     });
+  }
+
+  private clearPois() {
+    for (const wifiCircle of this.wifiPois) {
+      wifiCircle.setMap(null);
+    }
+
+    for (const accidentCircle of this.accidentPois) {
+      accidentCircle.setMap(null);
+    }
+
+    this.wifiPois = [];
+    this.accidentPois = [];
   }
 
   private createAccidentMarker(location, category = 1) {
@@ -207,7 +223,7 @@ export class HomePage implements OnInit, OnDestroy {
       case 2: fillColor = 'orangered'; break;
       case 3: fillColor = 'orange'; break;
     }
-    new google.maps.Circle({
+    return new google.maps.Circle({
       strokeColor:  fillColor,
       strokeOpacity: 0.8,
       strokeWeight: 2,
@@ -220,7 +236,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   private createWifiMarker(location: google.maps.LatLng, map: google.maps.Map) {
-    new google.maps.Circle({
+    return new google.maps.Circle({
         strokeColor: 'deepskyblue',
         strokeOpacity: 0.5,
         strokeWeight: 2,
