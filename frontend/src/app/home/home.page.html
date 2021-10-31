@@ -61,7 +61,7 @@
         </div>
         <div class="legend poi" *ngIf="poiLayerActive">
           <div class="legend-wrapper">
-            <ion-icon name="radio-button-off" style="color: yellow;"></ion-icon>
+            <ion-icon name="radio-button-off" style="color: orange;"></ion-icon>
             <ion-label class="legend-label">Light injury</ion-label>
           </div>
           <div class="legend-wrapper">
@@ -191,8 +191,25 @@
         </div>
       </div>
       <div class="legend poi" *ngIf="airLayerActive">
-        <div class="legend-wrapper">
-          //TODO
+        <div class="legend-wrapper" *ngIf="pm25Active">
+          <ion-label class="legend-label">PM25:</ion-label>
+          <ion-label class="legend-label">{{this.selectedAQI['pm25']}}</ion-label>
+        </div>
+        <div class="legend-wrapper" *ngIf="pm10Active">
+          <ion-label class="legend-label">PM10:</ion-label>
+          <ion-label class="legend-label">{{this.selectedAQI['pm10']}}</ion-label>
+        </div>
+        <div class="legend-wrapper" *ngIf="pm1Active">
+          <ion-label class="legend-label">PM1:</ion-label>
+          <ion-label class="legend-label">{{this.selectedAQI['pm1']}}</ion-label>
+        </div>
+        <div class="legend-wrapper" *ngIf="o3Active">
+          <ion-label class="legend-label">O3:</ion-label>
+          <ion-label class="legend-label">{{this.selectedAQI['o3']}}</ion-label>
+        </div>
+        <div class="legend-wrapper" *ngIf="no2Active">
+          <ion-label class="legend-label">NO2:</ion-label>
+          <ion-label class="legend-label">{{this.selectedAQI['no2']}}</ion-label>
         </div>
       </div>
     </div>

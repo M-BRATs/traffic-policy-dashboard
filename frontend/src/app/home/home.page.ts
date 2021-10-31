@@ -23,6 +23,7 @@ export class HomePage implements OnInit, OnDestroy {
   lng = 11.5820;
 
   selectedLayer = 'poi';
+  selectedAQI = null;
 
   modeOfTransport = 'bike';
 
@@ -207,7 +208,7 @@ export class HomePage implements OnInit, OnDestroy {
 
       safetyscore /= length;
       safetyscore *= 1000;
-      console.log(safetyscore);
+      this.routeSafetyStat = safetyscore;
 
       let wifiHotspots = 0;
 
@@ -420,7 +421,7 @@ export class HomePage implements OnInit, OnDestroy {
         parseFloat(data.pm25 ? data.pm25 : '0')
       );
       const color = this.translateAirQualityValueIntoColor(maxValue);
-      new google.maps.Circle({
+      const circle = new google.maps.Circle({
         strokeColor: color,
         strokeOpacity: 0.8,
         strokeWeight: 2,
@@ -429,6 +430,10 @@ export class HomePage implements OnInit, OnDestroy {
         map: this.airMap,
         center: pos,
         radius: 625,
+        clickable: true,
+      });
+      circle.addListener('click', (event) => {
+        this.selectedAQI = data;
       });
     }
   }
@@ -478,5 +483,25 @@ export class HomePage implements OnInit, OnDestroy {
 
   get placeActive() {
     return this.placeMarker != null;
+  }
+
+  get pm25Active() {
+    return this.selectedAQI != null && 'pm25' in this.selectedAQI;
+  }
+
+  get pm10Active() {
+    return this.selectedAQI != null && 'pm10' in this.selectedAQI;
+  }
+
+  get pm1Active() {
+    return this.selectedAQI != null && 'pm1' in this.selectedAQI;
+  }
+
+  get o3Active() {
+    return this.selectedAQI != null && 'o3' in this.selectedAQI;
+  }
+
+  get no2Active() {
+    return this.selectedAQI != null && 'no2' in this.selectedAQI;
   }
 }
