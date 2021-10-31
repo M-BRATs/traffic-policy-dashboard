@@ -25,7 +25,7 @@ export class HomePage implements OnInit, OnDestroy {
   selectedLayer = 'poi';
   selectedAQI = null;
 
-  modeOfTransport = 'bike';
+  modeOfTransport = 'car';
 
   poiMap: google.maps.Map;
   accessibilityMap: google.maps.Map;

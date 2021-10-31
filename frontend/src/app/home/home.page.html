@@ -176,7 +176,7 @@
         </div>
         <div class="legend-wrapper" *ngIf="routeActive">
           <ion-label class="legend-label">Safety Score:</ion-label>
-          <ion-label class="legend-value">{{this.routeSafetyStat}}</ion-label>
+          <ion-label class="legend-value">{{this.routeSafetyStat | number:"1.0-2"}}</ion-label>
         </div>
         <div class="legend-wrapper" *ngIf="routeActive || placeActive">
           <ion-label class="legend-label">Wifi hotspots nearby:</ion-label>
