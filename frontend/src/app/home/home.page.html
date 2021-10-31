@@ -148,12 +148,13 @@
         scrolling='no' [class.map]="safetyLayerActive" [class.hide-map]="!safetyLayerActive"></iframe>
     </div>
 
-    <div class="floating-container" *ngIf="!safetyLayerActive && (placeActive || routeActive || wifiLayerActive || accessibilityLayerActive)">
+    <div class="floating-container"
+         *ngIf="!safetyLayerActive && (placeActive || routeActive || wifiLayerActive || accessibilityLayerActive || (airLayerActive &&selectedAQI != null))">
       <div class="card-header">
         <ion-label class="card-heading">Stats</ion-label>
       </div>
       <div class="legend poi" *ngIf="poiLayerActive">
-         <div class="legend-wrapper" *ngIf="routeActive">
+        <div class="legend-wrapper" *ngIf="routeActive">
           <ion-label class="legend-label">Distance:</ion-label>
           <ion-label class="legend-label">{{this.routeDistanceStat}}</ion-label>
         </div>
