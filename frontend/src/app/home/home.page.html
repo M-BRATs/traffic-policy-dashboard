@@ -8,7 +8,7 @@
         </div>
         <ion-radio-group [value]="selectedLayer" (ionChange)="selectLayer($event)">
           <div class="card-item poi">
-            <ion-label class="item-label">POIs</ion-label>
+            <ion-label class="item-label">Routes and Places</ion-label>
             <ion-radio value="poi"></ion-radio>
           </div>
           <div class="card-item accessibility">
@@ -55,33 +55,51 @@
         </div>
           <div class="legend poi" *ngIf="poiLayerActive">
             <div class="legend-wrapper">
-              <ion-img class="legend-icon" src="../../assets/orange_accident.svg"></ion-img>
-              <ion-label class="legend-label">light injury</ion-label>
+              <ion-img class="legend-icon" src="../../assets/svg/orange_accident.svg"></ion-img>
+              <ion-label class="legend-label">Light injury</ion-label>
             </div>
             <div class="legend-wrapper">
-              <ion-img class="legend-icon" src="../../assets/orangered_accident.svg"></ion-img>
-              <ion-label class="legend-label">severe injury</ion-label>
+              <ion-img class="legend-icon" src="../../assets/svg/orangered_accident.svg"></ion-img>
+              <ion-label class="legend-label">Severe injury</ion-label>
             </div>
             <div class="legend-wrapper">
-              <ion-img class="legend-icon" src="../../assets/red_accident.svg"></ion-img>
-              <ion-label class="legend-label">death</ion-label>
+              <ion-img class="legend-icon" src="../../assets/svg/red_accident.svg"></ion-img>
+              <ion-label class="legend-label">Death</ion-label>
+            </div>
+          </div>F
+        <div class="legend poi" *ngIf="accessibilityLayerActive">
+            <div class="legend-wrapper">
+              <ion-img class="legend-icon" src="../../assets/svg/green_access.svg"></ion-img>
+              <ion-label class="legend-label">Good access</ion-label>
+            </div>
+            <div class="legend-wrapper">
+              <ion-img class="legend-icon" src="../../assets/svg/yellow_access.svg"></ion-img>
+              <ion-label class="legend-label">Medium access</ion-label>
+            </div>
+            <div class="legend-wrapper">
+              <ion-img class="legend-icon" src="../../assets/svg/red_access.svg"></ion-img>
+              <ion-label class="legend-label">Bad/No access</ion-label>
             </div>
           </div>
-          <div class="card-item accessibility" *ngIf="accessibilityLayerActive">
-            <ion-label class="item-label">Accessibility</ion-label>
-            <ion-label class="item-value">{{ this.accStat }}</ion-label>
+        <div class="legend poi" *ngIf="airLayerActive">
+            <div class="legend-wrapper">
+              <ion-img class="legend-icon" src="../../assets/svg/green_access.svg"></ion-img>
+              <ion-label class="legend-label">Good</ion-label>
+            </div>
+            <div class="legend-wrapper">
+              <ion-img class="legend-icon" src="../../assets/svg/yellow_access.svg"></ion-img>
+              <ion-label class="legend-label">Moderate</ion-label>
+            </div>
+            <div class="legend-wrapper">
+              <ion-img class="legend-icon" src="../../assets/svg/red_access.svg"></ion-img>
+              <ion-label class="legend-label">Unhealthy</ion-label>
+            </div>
           </div>
-          <div class="card-item safety" *ngIf="safetyLayerActive">
-            <ion-label class="item-label">Road Safety</ion-label>
-            <ion-label class="item-value">{{ this.safetyStat }}</ion-label>
-          </div>
-          <div class="card-item air" *ngIf="airLayerActive">
-            <ion-label class="item-label">Air Quality</ion-label>
-            <ion-label class="item-value">{{ this.airStat }}</ion-label>
-          </div>
-          <div class="card-item wifi" *ngIf="wifiLayerActive">
-            <ion-label class="item-label">Wifi Coverage</ion-label>
-            <ion-label class="item-value">{{ this.wifiStat }}</ion-label>
+        <div class="legend" *ngIf="wifiLayerActive">
+            <div class="legend-wrapper">
+              <ion-img class="legend-icon" src="../../assets/svg/hotspot.svg"></ion-img>
+              <ion-label class="legend-label">Public Wifi</ion-label>
+            </div>
           </div>
       </div>
     </div>

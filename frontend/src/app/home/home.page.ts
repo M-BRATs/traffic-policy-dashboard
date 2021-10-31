@@ -38,7 +38,8 @@ export class HomePage implements OnInit, OnDestroy {
   routeForm: FormGroup;
   placeForm: FormGroup;
 
-  routeTolerance = 0.0002;
+  routeToleranceAccidents = 0.0002;
+  routeToleranceWifi = 0.0009
   placeRadius = 250;
 
   wifiStat;
@@ -154,14 +155,14 @@ export class HomePage implements OnInit, OnDestroy {
         const category = parseInt(accident['UKATEGORIE']);
         const location = new gmaps.LatLng(lat, lng);
 
-        if (gmaps.geometry.poly.isLocationOnEdge(location, polyline, this.routeTolerance)) {
+        if (gmaps.geometry.poly.isLocationOnEdge(location, polyline, this.routeToleranceAccidents)) {
           this.accidentPois.push(this.createAccidentMarker(location, category));
         }
       }
 
       for (const wifiHotspot of wifiObjects) {
         const location = new gmaps.LatLng(wifiHotspot);
-        if (gmaps.geometry.poly.isLocationOnEdge(location, polyline, this.routeTolerance)) {
+        if (gmaps.geometry.poly.isLocationOnEdge(location, polyline, this.routeToleranceWifi)) {
           this.wifiPois.push(this.createWifiMarker(location, this.poiMap));
         }
       }
