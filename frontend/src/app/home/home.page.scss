@@ -261,6 +261,7 @@
   flex-direction: column;
   ion-icon {
     margin-top: 3px;
+    margin-right: 0.2em;
   }
 }
 
@@ -268,6 +269,7 @@
   display: inline-block;
   width: 80px;
   color: var(--text-inverted);
+  white-space: nowrap;
 }
 
 .legend-value {
