@@ -24,6 +24,8 @@ export class HomePage implements OnInit, OnDestroy {
 
   selectedLayer = 'poi';
 
+  modeOfTransport = 'bike';
+
   poiMap: google.maps.Map;
   accessibilityMap: google.maps.Map;
   wifiMap: google.maps.Map;
@@ -39,7 +41,7 @@ export class HomePage implements OnInit, OnDestroy {
   placeForm: FormGroup;
 
   routeToleranceAccidents = 0.0002;
-  routeToleranceWifi = 0.0009
+  routeToleranceWifi = 0.0009;
   placeRadius = 250;
 
   wifiStat;
@@ -124,6 +126,10 @@ export class HomePage implements OnInit, OnDestroy {
     this.selectedLayer = $event.target.value;
   }
 
+  selectModeOfTransport($event) {
+    this.modeOfTransport = $event.target.value;
+  }
+
   displayRoute() {
     this.clearPois();
 
@@ -136,10 +142,19 @@ export class HomePage implements OnInit, OnDestroy {
     }
     const gmaps = google.maps;
 
+    let travelMode: google.maps.TravelMode;
+    if (this.modeOfTransport === 'bike') {
+      travelMode = gmaps.TravelMode.BICYCLING;
+    } else if (this.modeOfTransport === 'car') {
+      travelMode = gmaps.TravelMode.DRIVING;
+    } else {
+      travelMode = gmaps.TravelMode.WALKING;
+    }
+
     this.directionService.route({
       origin,
       destination,
-      travelMode: gmaps.TravelMode.DRIVING,
+      travelMode,
     }, (result) => {
       this.directionRenderer.setDirections(result);
       const path = gmaps.geometry.encoding.decodePath(result.routes[0].overview_polyline);
@@ -246,7 +261,7 @@ export class HomePage implements OnInit, OnDestroy {
       strokeColor:  fillColor,
       strokeOpacity: 0.8,
       strokeWeight: 2,
-      fillColor: fillColor,
+      fillColor,
       fillOpacity: 0.35,
       map: this.poiMap,
       center: location,
@@ -261,7 +276,7 @@ export class HomePage implements OnInit, OnDestroy {
         strokeWeight: 2,
         fillColor: 'DeepSkyBlue',
         fillOpacity: 0.35,
-        map: map,
+        map,
         center: location,
         radius: 100,
       });
