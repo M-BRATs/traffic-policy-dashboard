@@ -1,6 +1,10 @@
+![image](https://user-images.githubusercontent.com/23716586/140752472-adece23f-e406-4f50-aa0e-c5f02b85cbb1.png)
+
+[Winning submission](https://devpost.com/software/policydriver) for the **Google challenge** about safety and accessiblity of transportation in cities at the [Smart City Hack 2021](https://smart-city-hack.devpost.com/submissions/search?utf8=%E2%9C%93&filter%5Bwhich+challenge+did+you+participate+in%3F%5D%5B%5D=google).
+
 # PolicyDriver
 A platform that enables policy makers to leverage open data in their decision making.
-Enjoy a working prototype of PolicyMaker by opening http://you-teach.me/ in Google Chrome.
+Enjoy a working prototype of PolicyMaker by opening our [Web App](http://you-teach.me/) in Google Chrome.
 
 ## Inspiration
 **Smart cities** require **smart policies**. With increasing population density, a wide variety of different modes of transportation and environmental concerns, a major challenge in city planning is shaping the future of transportation. In order to make smart decisions in this area, policy makers need to have a good overview of **traffic safety, air quality and accessibility** of their city. By leveraging **open data and intuitive visualization**, we provide this overview.
