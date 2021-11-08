@@ -4,7 +4,7 @@
 
 # PolicyDriver
 A platform that enables policy makers to leverage open data in their decision making.
-Enjoy a working prototype of PolicyMaker by opening our [Web App](http://you-teach.me/) in Google Chrome.
+Enjoy a working prototype of PolicyDriver by opening the [PolicyDriver web app](http://you-teach.me/) in Google Chrome.
 
 ## Inspiration
 **Smart cities** require **smart policies**. With increasing population density, a wide variety of different modes of transportation and environmental concerns, a major challenge in city planning is shaping the future of transportation. In order to make smart decisions in this area, policy makers need to have a good overview of **traffic safety, air quality and accessibility** of their city. By leveraging **open data and intuitive visualization**, we provide this overview.
